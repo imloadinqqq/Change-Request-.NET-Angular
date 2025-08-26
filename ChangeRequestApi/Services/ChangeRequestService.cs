@@ -1,0 +1,45 @@
+using ChangeRequestApi.Models;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
+
+namespace ChangeRequestApi.Services;
+
+public class ChangeRequestService
+{
+  private readonly IMongoCollection<ChangeRequest> _changeCollection;
+
+  public ChangeRequestService(IOptions<ChangeRequestDatabaseSettings> changeRequestDatabaseSettings)
+  {
+    var mongoClient = new MongoClient(
+        changeRequestDatabaseSettings.Value.ConnectionString);
+
+    var mongoDatabase = mongoClient.GetDatabase(
+        changeRequestDatabaseSettings.Value.DatabaseName);
+
+    _changeCollection = mongoDatabase.GetCollection<ChangeRequest>(
+        changeRequestDatabaseSettings.Value.ChangeRequestCollectionName);
+  }
+
+  // CRUD operations
+
+  public async Task<List<ChangeRequest>> GetAsync() =>
+    await _changeCollection.Find(_ => true).ToListAsync();
+
+  public async Task<ChangeRequest?> GetAsync(string id) =>
+    await _changeCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+
+  public async Task CreateAsync(ChangeRequest newRequest) =>
+    await _changeCollection.InsertOneAsync(newRequest);
+
+  public async Task UpdateAsync(string id, ChangeRequest updatedRequest) =>
+    await _changeCollection.ReplaceOneAsync(x => x.Id == id, updatedRequest);
+
+  public async Task RemoveAsync(string id) =>
+    await _changeCollection.DeleteOneAsync(x => x.Id == id);
+
+  public async Task<long> DeleteAllAsync()
+  {
+    var result = await _changeCollection.DeleteManyAsync(FilterDefinition<ChangeRequest>.Empty);
+    return result.DeletedCount;
+  }
+}
