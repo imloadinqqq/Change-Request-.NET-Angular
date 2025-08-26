@@ -1,0 +1,11 @@
+<h2>Change Requests</h2>
+<ul>
+  <li *ngFor="let req of requests">
+    <strong>ID:</strong> {{ req.Id }}<br>
+    <strong>Title:</strong> {{ req.Title }}<br>
+    <strong>Description:</strong> {{ req.Description }}<br>
+    <strong>Status:</strong> {{ req.Status }}<br>
+    <strong>Priority:</strong> {{ req.Priority }}<br>
+    <strong>Target Date:</strong> {{ req["Target Date"] || 'N/A' }}<br>
+    <strong>Approved By:</strong> {{ req["Id of Approver"] || 'Pending' }}
+</ul>
