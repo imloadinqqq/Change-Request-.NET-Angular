@@ -1,0 +1,16 @@
+# Build outputs
+/bin/
+/obj/
+/publish/
+/out/
+
+# User-specific files
+*.user
+*.vs
+*.suo
+
+# Logs
+*.log
+
+# Rider/WebStorm caches
+.idea/

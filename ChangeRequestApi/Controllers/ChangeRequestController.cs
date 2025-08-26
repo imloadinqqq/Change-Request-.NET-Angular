@@ -1,9 +1,9 @@
 using ChangeRequestApi.Models;
 using ChangeRequestApi.Services;
 using ChangeRequestApi.Auth;
-using Microsoft.AspNetCore.Authorization;
+// using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+// using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
@@ -18,7 +18,7 @@ namespace ChangeRequestApi.Controllers;
 // RemoveAsync - Delete
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/requests")]
 public class ChangeRequestController : ControllerBase
 {
   private readonly ChangeRequestService _changeRequestService;
@@ -30,7 +30,7 @@ public class ChangeRequestController : ControllerBase
     _configuration = configuration;
   }
 
-  [Authorize]
+  // [Authorize]
   [HttpGet]
   public async Task<List<ChangeRequest>> Get() =>
     await _changeRequestService.GetAsync();

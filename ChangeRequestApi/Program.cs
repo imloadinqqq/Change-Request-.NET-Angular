@@ -5,19 +5,34 @@ using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 // Add services to the container.
 builder.Services.Configure<ChangeRequestDatabaseSettings>(
     builder.Configuration.GetSection("ChangeRequestDatabase"));
 
+builder.Services.AddCors(options => {
+  options.AddPolicy(name: MyAllowSpecificOrigins,
+                    policy =>
+                    {
+                      policy.WithOrigins("http://localhost:4200");
+                    });
+});
+
 builder.Services.AddSingleton<ChangeRequestService>();
 
+
 builder.Services.AddControllers()
-  .AddJsonOptions(
-      options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
+  .AddJsonOptions(options => {
+  options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+  options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+});
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
