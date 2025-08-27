@@ -1,7 +1,7 @@
 using ChangeRequestApi.Models;
 using ChangeRequestApi.Services;
 using ChangeRequestApi.Auth;
-// using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 // using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
@@ -30,7 +30,7 @@ public class ChangeRequestController : ControllerBase
     _configuration = configuration;
   }
 
-  // [Authorize]
+  [Authorize(Roles = "Admin")]
   [HttpGet]
   public async Task<List<ChangeRequest>> Get() =>
     await _changeRequestService.GetAsync();
@@ -93,34 +93,5 @@ public class ChangeRequestController : ControllerBase
   {
     var deletedCount = await _changeRequestService.DeleteAllAsync();
     return Ok(new { Deleted = deletedCount });
-  }
-
-  [HttpPost("login")]
-  public IActionResult Login([FromBody] LoginRequest request)
-  {
-      // Validate user credentials (from DB or in-memory)
-      if (request.Username != "admin" || request.Password != "password")
-          return Unauthorized();
-
-      var jwtSettings = _configuration.GetSection("JwtSettings").Get<JwtSettings>();
-
-      var claims = new[]
-      {
-          new Claim(ClaimTypes.Name, request.Username),
-          new Claim(ClaimTypes.Role, "Admin")
-      };
-
-      var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key));
-      var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-      var token = new JwtSecurityToken(
-          issuer: jwtSettings.Issuer,
-          audience: jwtSettings.Audience,
-          claims: claims,
-          expires: DateTime.Now.AddMinutes(30),
-          signingCredentials: creds
-      );
-
-      return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
   }
 }

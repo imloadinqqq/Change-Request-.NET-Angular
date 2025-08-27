@@ -5,6 +5,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using System.Text;
@@ -12,10 +13,18 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
-// Add services to the container.
+
+// settings
 builder.Services.Configure<ChangeRequestDatabaseSettings>(
     builder.Configuration.GetSection("ChangeRequestDatabase"));
 
+builder.Services.Configure<UserDatabaseSettings>(
+    builder.Configuration.GetSection("UserDatabase"));
+
+builder.Services.Configure<JwtSettings>(
+    builder.Configuration.GetSection("JwtSettings"));
+
+// services
 builder.Services.AddCors(options => {
   options.AddPolicy(name: MyAllowSpecificOrigins,
                     policy =>
@@ -25,16 +34,13 @@ builder.Services.AddCors(options => {
 });
 
 builder.Services.AddSingleton<ChangeRequestService>();
-
+builder.Services.AddSingleton<UserService>();
 
 builder.Services.AddControllers()
   .AddJsonOptions(options => {
   options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
   options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
 });
-
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
 
 builder.Services.AddSwaggerGen(c => {
   c.SwaggerDoc("v1", new OpenApiInfo { Title = "ChangeRequest API", Version = "v1" });
@@ -44,8 +50,9 @@ builder.Services.AddSwaggerGen(c => {
     Description = "JWT Authorization header using the Bearer scheme.",
     Name = "Authorization",
     In = ParameterLocation.Header,
-    Type = SecuritySchemeType.ApiKey,
-    Scheme = "Bearer"
+    Type = SecuritySchemeType.Http,
+    Scheme = "bearer",
+    BearerFormat = "JWT"
   });
 
   c.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -59,7 +66,7 @@ builder.Services.AddSwaggerGen(c => {
           Id = "Bearer"
         }
       },
-      Array.Empty<string>()
+      new string[] {}
     }
   });
 });
@@ -69,42 +76,61 @@ var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSetting
 
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+  options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+  options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
 .AddJwtBearer(options =>
 {
-    options.TokenValidationParameters = new TokenValidationParameters
+  options.Events = new JwtBearerEvents
+  {
+    OnAuthenticationFailed = ctx =>
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtSettings.Issuer,
-        ValidAudience = jwtSettings.Audience,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key))
-    };
+      Console.WriteLine("JWT failed: " + ctx.Exception);
+      return Task.CompletedTask;
+    },
+    OnTokenValidated = ctx =>
+    {
+      Console.WriteLine("JWT validated: " + ctx.SecurityToken);
+      return Task.CompletedTask;
+    }
+  };
+  options.TokenValidationParameters = new TokenValidationParameters
+  {
+    ValidateIssuer = true,
+    ValidateAudience = true,
+    ValidateLifetime = true,
+    ValidateIssuerSigningKey = true,
+    ValidIssuer = jwtSettings!.Issuer,
+    ValidAudience = jwtSettings.Audience,
+    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
+    ClockSkew = TimeSpan.Zero
+  };
 });
 
+// Console.WriteLine(jwtSettings!.Key);
+// Console.WriteLine(jwtSettings!.Issuer);
+// Console.WriteLine(jwtSettings.Audience);
 
 // auth service
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.Configure<CookieAuthenticationOptions>(builder.Configuration.GetSection("CookieSettings"));
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
-    app.UseSwaggerUi(options =>
-    {
-      options.Path = "/swagger";
-      options.DocumentPath = "/openapi/v1.json";
-      options.DocumentTitle = "ChangeRequest API v1";
-    });
+  app.UseSwagger();
+  app.UseSwaggerUI(c =>
+  {
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "ChangeRequest API v1");
+    c.RoutePrefix = "swagger";
+  });
 }
 
 app.UseHttpsRedirection();
+app.UseCors();
 
 // use our auth service
 app.UseAuthentication();
