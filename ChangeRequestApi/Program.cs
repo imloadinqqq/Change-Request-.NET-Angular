@@ -5,7 +5,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using System.Text;
@@ -83,14 +83,21 @@ builder.Services.AddAuthentication(options =>
 {
   options.Events = new JwtBearerEvents
   {
+    // ILogger API
     OnAuthenticationFailed = ctx =>
     {
-      Console.WriteLine("JWT failed: " + ctx.Exception);
+      var logger = ctx.HttpContext.RequestServices
+        .GetRequiredService<ILoggerFactory>()
+        .CreateLogger("JwtBearer");
+      logger.LogWarning(ctx.Exception, "JWT authentication failed.");
       return Task.CompletedTask;
     },
     OnTokenValidated = ctx =>
     {
-      Console.WriteLine("JWT validated: " + ctx.SecurityToken);
+      var logger = ctx.HttpContext.RequestServices
+        .GetRequiredService<ILoggerFactory>()
+        .CreateLogger("JwtBearer");
+      logger.LogInformation("JWT validated for {Token}", ctx.SecurityToken);
       return Task.CompletedTask;
     }
   };
@@ -106,10 +113,6 @@ builder.Services.AddAuthentication(options =>
     ClockSkew = TimeSpan.Zero
   };
 });
-
-// Console.WriteLine(jwtSettings!.Key);
-// Console.WriteLine(jwtSettings!.Issuer);
-// Console.WriteLine(jwtSettings.Audience);
 
 // auth service
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
