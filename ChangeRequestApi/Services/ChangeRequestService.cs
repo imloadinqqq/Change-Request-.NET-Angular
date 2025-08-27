@@ -28,6 +28,9 @@ public class ChangeRequestService
   public async Task<ChangeRequest?> GetAsync(string id) =>
     await _changeCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 
+  public async Task<List<ChangeRequest>> GetByUserIdAsync(string userId) =>
+    await _changeCollection.Find(x => x.UserId == userId).ToListAsync();
+
   public async Task CreateAsync(ChangeRequest newRequest) =>
     await _changeCollection.InsertOneAsync(newRequest);
 

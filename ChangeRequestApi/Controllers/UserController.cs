@@ -35,6 +35,17 @@ public class UserController : ControllerBase
     return Ok(user);
   }
 
+  [HttpGet("users")]
+  [Authorize(Roles = "Admin")]
+  public async Task<ActionResult<List<User>>> GetUsers()
+  {
+    List<User> users;
+
+    users = await _userService.GetAllAsync();
+
+    return users;
+  }
+
   [HttpPost("createUser")]
   public async Task<IActionResult> Create(User newUser)
   {
@@ -54,7 +65,7 @@ public class UserController : ControllerBase
     {
       new Claim(JwtRegisteredClaimNames.Sub, user.Id!),
       new Claim(JwtRegisteredClaimNames.UniqueName, user.Username),
-      new Claim(ClaimTypes.Role, user.Type.ToString())
+      new Claim(ClaimTypes.Role, user.Type.ToString()) // used to authorize Role in ChangeRequestController
     };
 
     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
@@ -67,9 +78,6 @@ public class UserController : ControllerBase
       expires: DateTime.UtcNow.AddHours(1),
       signingCredentials: creds
     );
-
-    Console.WriteLine(token);
-    Console.WriteLine(_jwtSettings.Key);
 
     return Ok(new
     {

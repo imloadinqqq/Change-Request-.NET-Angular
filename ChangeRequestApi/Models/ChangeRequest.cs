@@ -26,6 +26,10 @@ namespace ChangeRequestApi.Models
     [JsonPropertyName("Id")]
     public string? Id { get; set; }
 
+    [BsonRepresentation(BsonType.ObjectId)]
+    [JsonPropertyName("UserId")]
+    public string? UserId { get; set; }
+
     [BsonElement("title")]
     [JsonPropertyName("Title")]
     public string Title { get; set; } = null!;
