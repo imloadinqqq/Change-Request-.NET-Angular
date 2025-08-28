@@ -1,0 +1,19 @@
+<div class="login-page">
+  <form class="login-form" (ngSubmit)="login()">
+    <div class="input-user">
+      <input #username type="text" placeholder="Username" name="username" required>
+    </div>
+    <div class="input-pass">
+      <input #pass type="password" placeholder="Password" name="pass" required (input)="editPassword()">
+      <button id="show" *ngIf="typedPassword" type="button" (click)="showPassword()">
+        {{ show ? 'Hide' : 'Show' }}
+      </button>
+    </div>
+    <div class="submit">
+      <button type="submit">Submit</button>
+    </div>
+    <div class="create-account">
+      <a [routerLink]="['/createUser']">Don't have an account?</a>
+    </div>
+  </form>
+</div>

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -20,6 +20,8 @@ export class ChangeRequestService {
   private http = inject(HttpClient);
 
   getAllRequests(): Observable<ChangeRequest[]> {
-    return this.http.get<ChangeRequest[]>(this.api_url);
+    const token = localStorage.getItem('auth_token');
+    const headers = token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : undefined
+    return this.http.get<ChangeRequest[]>(this.api_url, { headers });
   }
 }
