@@ -48,7 +48,7 @@ export class LoginComponent {
         console.log('Role: ', userType);
 
         // add more role-based redirects LATER
-        this.router.navigate(['/requests']);
+        this.router.navigate(['/dashboard']);
       },
       error: (err) => {
         console.error('Login failed: ', err);

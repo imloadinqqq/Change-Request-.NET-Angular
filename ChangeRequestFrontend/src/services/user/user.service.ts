@@ -92,4 +92,11 @@ export class UserService {
     const now = Math.floor(Date.now() / 1000);
     return decoded.exp < now;
   }
+
+  isLoggedIn(): boolean {
+    const token = this.getToken();
+    if (!token) return false;
+
+    return !this.isTokenExpired();
+  }
 }

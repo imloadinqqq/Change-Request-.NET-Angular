@@ -1,0 +1,10 @@
+<div *ngIf="userType === 'Admin'">
+  Admin Dashboard
+</div>
+<div *ngIf="userType === 'Developer'">
+  Developer Dashboard
+</div>
+<div *ngIf="userType === 'Supervisor'">
+  Supervisor Dashboard
+</div>
+<button (click)="logout()">Logout</button>
