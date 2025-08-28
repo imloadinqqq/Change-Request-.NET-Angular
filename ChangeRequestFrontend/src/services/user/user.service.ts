@@ -51,6 +51,16 @@ export class UserService {
     return this.isBrowser() ? localStorage.getItem(this.tokenKey) : null;
   }
 
+  // logout
+  removeToken(): void {
+    localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem('username');
+  }
+
+  logout(): void {
+    this.removeToken();
+  }
+
   private getDecodedToken(): JwtPayload | null {
     const token = this.getToken();
     if (!token) return null;
