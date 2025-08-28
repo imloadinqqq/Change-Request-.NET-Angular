@@ -29,7 +29,10 @@ builder.Services.AddCors(options => {
   options.AddPolicy(name: MyAllowSpecificOrigins,
                     policy =>
                     {
-                      policy.WithOrigins("http://localhost:4200");
+                      policy.WithOrigins("http://localhost:4200")
+                      .AllowAnyHeader()
+                      .AllowAnyMethod()
+                      .AllowCredentials();
                     });
 });
 
@@ -133,7 +136,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors();
+app.UseCors(MyAllowSpecificOrigins);
 
 // use our auth service
 app.UseAuthentication();
