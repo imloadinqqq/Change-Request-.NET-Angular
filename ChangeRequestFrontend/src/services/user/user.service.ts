@@ -1,6 +1,7 @@
 import { jwtDecode } from 'jwt-decode';
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { tap } from 'rxjs';
 
 interface JwtPayload {
   sub: string;
@@ -21,17 +22,33 @@ export class UserService {
 
   private http = inject(HttpClient);
 
+  private isBrowser(): boolean {
+    return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
+  }
+
   login(credentials: { username: string; password: string }) {
-    return this.http.post(this.apiUrl + '/login', credentials);
+    return this.http.post<{ token: string; user: { id: string; username: string } }>(
+      this.apiUrl + '/login',
+      credentials
+    ).pipe(
+      tap(res => {
+        if (this.isBrowser()) {
+          localStorage.setItem(this.tokenKey, res.token);
+          localStorage.setItem('username', res.user.username);
+        }
+      })
+    );
   }
 
   // called after successful login (200 status)
   setToken(token: string): void {
-    localStorage.setItem(this.tokenKey, token);
+    if (this.isBrowser()) {
+      localStorage.setItem(this.tokenKey, token);
+    }
   }
 
   getToken(): string | null {
-    return localStorage.getItem(this.tokenKey);
+    return this.isBrowser() ? localStorage.getItem(this.tokenKey) : null;
   }
 
   private getDecodedToken(): JwtPayload | null {
@@ -53,6 +70,10 @@ export class UserService {
   getUserId(): string | null {
     const decoded = this.getDecodedToken();
     return decoded ? decoded.sub : null;
+  }
+
+  getUserName(): string | null {
+    return this.isBrowser() ? localStorage.getItem("username") : null;
   }
 
   isTokenExpired(): boolean {

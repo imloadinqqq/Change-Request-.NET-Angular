@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { UserService } from '../user/user.service';
 
 export interface ChangeRequest {
   "Id"?: string;
@@ -17,11 +18,17 @@ export interface ChangeRequest {
 })
 export class ChangeRequestService {
   private readonly api_url = 'http://localhost:5163/api/requests'
+  private userService = inject(UserService);
   private http = inject(HttpClient);
 
   getAllRequests(): Observable<ChangeRequest[]> {
-    const token = localStorage.getItem('auth_token');
-    const headers = token ? new HttpHeaders({ Authorization: `Bearer ${token}` }) : undefined
+    const token = this.userService.getToken(); // read from local storage to avoid refresh errors
+    let headers = new HttpHeaders();
+    console.log(localStorage.getItem('auth_token'));
+
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
     return this.http.get<ChangeRequest[]>(this.api_url, { headers });
   }
 }
