@@ -2,10 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { UserService } from '../../services/user/user.service';
+import { ClockComponent } from '../clock/clock.component';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ClockComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
@@ -14,6 +15,7 @@ export class DashboardComponent implements OnInit {
   private router = inject(Router);
 
   userType: string | null = null;
+  userName: string | null = null;
 
   ngOnInit(): void {
       this.loadDashBoard();
@@ -21,35 +23,18 @@ export class DashboardComponent implements OnInit {
 
   loadDashBoard(): void {
     this.userType = this.userService.getUserType();
-
-    // handle user type
-    switch(this.userType) {
-      case 'Admin': {
-        console.log('admin');
-        // admin dashboard
-        break;
-      }
-      case 'Developer': {
-        console.log('dev');
-        // dev dashboard
-        break;
-      }
-      case 'Supervisor': {
-        console.log('super');
-        // supervisor dashboard
-        break;
-      }
-      default: {
-        console.log('not logged in');
-        break;
-      }
-    }
+    this.userName = this.userService.getUserName();
   }
 
   logout() {
     this.userService.logout();
     this.router.navigate(['/login']);
     console.log('logged out');
+  }
+
+  navToRequests() {
+    this.router.navigate(['/requests']);
+    console.log('requests');
   }
 
 }

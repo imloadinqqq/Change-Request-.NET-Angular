@@ -1,10 +1,20 @@
+<h2>Hello, {{ userName }}</h2>
 <div *ngIf="userType === 'Admin'">
-  Admin Dashboard
+  <h1>Admin Dashboard</h1>
+  <app-clock></app-clock>
+
+  <button (click)="navToRequests()">Requests</button>
 </div>
 <div *ngIf="userType === 'Developer'">
-  Developer Dashboard
+  <h1>Developer Dashboard</h1>
+  <app-clock></app-clock>
+
+  <button (click)="navToRequests()">Requests</button>
 </div>
 <div *ngIf="userType === 'Supervisor'">
   Supervisor Dashboard
+  <app-clock></app-clock>
+
+  <button (click)="navToRequests()">Requests</button>
 </div>
 <button (click)="logout()">Logout</button>
