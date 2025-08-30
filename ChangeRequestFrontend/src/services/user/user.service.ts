@@ -1,7 +1,7 @@
 import { jwtDecode } from 'jwt-decode';
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, tap } from 'rxjs';
 
 interface JwtPayload {
   sub: string;
@@ -12,13 +12,25 @@ interface JwtPayload {
   aud: string;
 }
 
+export interface User {
+  "Id"?: string;
+  "Username": string;
+  "Password"?: string;
+  "UserType"?: string | null;
+}
+
+interface UserInfo {
+  UserName: string;
+  Password: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
   private tokenKey = 'auth_token';
-  private apiUrl = 'http://localhost:5163/api';
+  private api_url = 'http://localhost:5163/api';
 
   private http = inject(HttpClient);
 
@@ -28,7 +40,7 @@ export class UserService {
 
   login(credentials: { username: string; password: string }) {
     return this.http.post<{ token: string; user: { id: string; username: string } }>(
-      this.apiUrl + '/login',
+      this.api_url + '/login',
       credentials
     ).pipe(
       tap(res => {
@@ -38,6 +50,15 @@ export class UserService {
         }
       })
     );
+  }
+
+  sendUserInfo(data: UserInfo): Observable<UserInfo> {
+    return this.http.post<UserInfo>(this.api_url + '/createUser', data);
+  }
+
+  updateUserRole(userId: string, role: string): Observable<string> {
+    const url = `${this.api_url}/user/${userId}`;
+    return this.http.patch<string>(url, { role });
   }
 
   // called after successful login (200 status)
@@ -84,6 +105,18 @@ export class UserService {
 
   getUserName(): string | null {
     return this.isBrowser() ? localStorage.getItem("username") : null;
+  }
+
+  getAllUsers(): Observable<User[]> {
+    const token = this.getToken();
+    const url = `${this.api_url}/users`;
+    let headers = new HttpHeaders();
+
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+
+    return this.http.get<User[]>(url, { headers });
   }
 
   isTokenExpired(): boolean {

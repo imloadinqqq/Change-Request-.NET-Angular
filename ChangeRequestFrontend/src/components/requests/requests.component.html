@@ -1,6 +1,9 @@
 <div *ngIf="userName">Welcome, {{ userName }}</div>
 <div *ngIf="userType">Role: {{ userType }}</div>
+
 <h2>Change Requests</h2>
+<button (click)="navToDashboard()">Dashboard</button>
+
 <ul>
   <li *ngFor="let req of requests">
     <strong>ID:</strong> {{ req.Id }}<br>
@@ -11,3 +14,4 @@
     <strong>Target Date:</strong> {{ req["Target Date"] || 'N/A' }}<br>
     <strong>Approved By:</strong> {{ req["Id of Approver"] || 'Pending' }}
 </ul>
+

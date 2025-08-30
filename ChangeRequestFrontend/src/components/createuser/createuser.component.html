@@ -1,1 +1,20 @@
-<p>createuser works!</p>
+<div class="createUser-page">
+  <form class="createUser-form" (ngSubmit)="submitUser()">
+    <div class="input-user">
+      <input #username type="text" placeholder="Username" name="username" required>
+    </div>
+    <div class="input-pass">
+      <input #pass type="password" placeholder="Password" name="pass" required (input)="editPassword()">
+      <input #validpass type="password" placeholder="Please enter your password again" name="validpass" required (input)="editPassword()">
+      <button id="show" *ngIf="typedPassword" type="button" (click)="showPassword()">
+        {{ show ? 'Hide' : 'Show' }}
+      </button>
+    </div>
+    <div class="submit">
+      <button type="submit">Submit</button>
+    </div>
+    <div class="create-account">
+      <a [routerLink]="['/createUser']">Don't have an account?</a>
+    </div>
+  </form>
+</div>

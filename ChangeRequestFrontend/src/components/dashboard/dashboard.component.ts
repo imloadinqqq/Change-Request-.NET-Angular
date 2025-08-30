@@ -37,4 +37,9 @@ export class DashboardComponent implements OnInit {
     console.log('requests');
   }
 
+  viewUsers() {
+    this.router.navigate(['/users']);
+    console.log('update');
+  }
+
 }

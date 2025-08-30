@@ -41,4 +41,8 @@ export class RequestsComponent implements OnInit {
   loadUserType() {
     this.userType = this.userService.getUserType();
   }
+
+  navToDashboard() {
+    this.router.navigate(['/dashboard']);
+  }
 }
