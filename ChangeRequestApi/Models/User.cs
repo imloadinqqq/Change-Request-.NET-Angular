@@ -27,7 +27,7 @@ namespace ChangeRequestApi.Models
     public string Password { get; set; } = null!;
 
     [BsonElement("usertype")]
-    [JsonPropertyName("User Type")]
+    [JsonPropertyName("UserType")]
     public UserType Type { get; set; } = UserType.Developer;
   }
 
