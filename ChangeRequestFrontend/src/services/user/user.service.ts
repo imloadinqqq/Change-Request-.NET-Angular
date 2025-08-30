@@ -57,7 +57,7 @@ export class UserService {
   }
 
   updateUserRole(userId: string, role: string): Observable<string> {
-    const url = `${this.api_url}/user/${userId}`;
+    const url = `${this.api_url}/users/${userId}/role`;
     return this.http.patch<string>(url, { role });
   }
 
@@ -109,7 +109,7 @@ export class UserService {
 
   getAllUsers(): Observable<User[]> {
     const token = this.getToken();
-    const url = `${this.api_url}/users`;
+    const url = `${this.api_url}/users/all`;
     let headers = new HttpHeaders();
 
     if (token) {

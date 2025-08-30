@@ -24,7 +24,7 @@ public class UserController : ControllerBase
     _jwtSettings = jwtSettings.Value;
   }
 
-  [HttpGet("user/{id:length(24)}")]
+  [HttpGet("users/{id:length(24)}")]
   public async Task<IActionResult> Get(string id)
   {
     var user = await _userService.GetAsync(id);
@@ -46,7 +46,7 @@ public class UserController : ControllerBase
     return users;
   }
 
-  [HttpPatch("user/{id:length(24)}")]
+  [HttpPatch("users/{id:length(24)}/role")]
   [Authorize(Roles = "Admin")]
   public async Task<IActionResult> UpdateRole(string id, [FromBody] UpdateRoleObject obj)
   {
@@ -65,7 +65,7 @@ public class UserController : ControllerBase
     }
   }
 
-  [HttpPost("createUser")]
+  [HttpPost("register")]
   public async Task<IActionResult> Create([FromBody] RegisterUserObject obj)
   {
     var existingUser = await _userService.GetByUsernameAsync(obj.Username);
@@ -82,7 +82,7 @@ public class UserController : ControllerBase
   }
 
   [HttpPost("login")]
-  public async Task<IActionResult> Login([FromBody] LoginRequest request)
+  public async Task<IActionResult> Login([FromBody] LoginRequestObject request)
   {
     var user = await _userService.GetByCredentialsAsync(request.Username, request.Password);
     if (user == null)
@@ -117,10 +117,4 @@ public class UserController : ControllerBase
   [HttpGet("protected")]
   public IActionResult GetProtected() => Ok("You are an admin!");
 
-}
-
-public class LoginRequest
-{
-    public string Username { get; set; } = null!;
-    public string Password { get; set; } = null!;
 }
