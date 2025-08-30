@@ -39,4 +39,15 @@ namespace ChangeRequestApi.Models
     [JsonPropertyName("password")]
     public string Password { get; set; } = null!;
   }
+
+  public class RegisterUserObject
+  {
+    public string Username { get; set; } = null!;
+    public string Password { get; set; } = null!;
+  }
+
+  public class UpdateRoleObject 
+  {
+    public string NewRole { get; set; } = null!;
+  }
 }

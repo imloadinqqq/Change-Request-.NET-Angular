@@ -26,10 +26,37 @@ public class UserService
   public async Task<List<User>> GetAllAsync() =>
     await _userCollection.Find(_ => true).ToListAsync();
 
-  public async Task CreateAsync(User newUser)
+  public async Task<User> CreateAsync(RegisterUserObject regis)
   {
-    newUser.Password = BCrypt.Net.BCrypt.HashPassword(newUser.Password);
+    var newUser = new User
+    {
+      Username = regis.Username,
+      Password = BCrypt.Net.BCrypt.HashPassword(regis.Password),
+      Type = UserType.Developer
+    };
+
     await _userCollection.InsertOneAsync(newUser);
+    return newUser;
+  }
+
+  public async Task PatchAsync(string id, string newRole)
+  {
+    if (!Enum.TryParse<UserType>(newRole, ignoreCase: true, out var roleEnum))
+    {
+      throw new ArgumentException("Invalid role type");
+    }
+
+    var update = Builders<User>.Update.Set(u => u.Type, roleEnum);
+
+    var res = await _userCollection.UpdateOneAsync(
+      u => u.Id == id,
+      update
+    );
+
+    if (res.MatchedCount == 0)
+    {
+      throw new KeyNotFoundException("User not found");
+    }
   }
 
   public async Task<User?> GetByCredentialsAsync(string username, string password)
@@ -43,5 +70,14 @@ public class UserService
           return null;
 
       return user;
+  }
+
+  public async Task<User?> GetByUsernameAsync(string username)
+  {
+    var user = await _userCollection.Find(u => u.Username == username).FirstOrDefaultAsync();
+    if (user is null)
+      return null;
+
+    return user;
   }
 }

@@ -46,12 +46,39 @@ public class UserController : ControllerBase
     return users;
   }
 
-  [HttpPost("createUser")]
-  public async Task<IActionResult> Create(User newUser)
+  [HttpPatch("user/{id:length(24)}")]
+  [Authorize(Roles = "Admin")]
+  public async Task<IActionResult> UpdateRole(string id, [FromBody] UpdateRoleObject obj)
   {
-    await _userService.CreateAsync(newUser);
+    try
+    {
+      await _userService.PatchAsync(id, obj.NewRole);
+      return Ok("Role updated successfully");
+    }
+    catch (ArgumentException ex)
+    {
+      return BadRequest(ex.Message);
+    }
+    catch (KeyNotFoundException ex)
+    {
+      return NotFound(ex.Message);
+    }
+  }
 
-    return CreatedAtAction(nameof(Get), new { id = newUser.Id }, newUser);
+  [HttpPost("createUser")]
+  public async Task<IActionResult> Create([FromBody] RegisterUserObject obj)
+  {
+    var existingUser = await _userService.GetByUsernameAsync(obj.Username);
+    if (existingUser != null)
+      return BadRequest("Username already exists");
+
+    var newUser = await _userService.CreateAsync(obj);
+
+    return Ok(new {
+      Id = newUser.Id,
+      Username = newUser.Username,
+      Type = newUser.Type
+    });
   }
 
   [HttpPost("login")]
