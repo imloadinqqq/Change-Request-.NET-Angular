@@ -109,6 +109,20 @@ public class ChangeRequestController : ControllerBase
     return NoContent();
   }
 
+  [HttpPost("{requestId}/approve")]
+  [Authorize(Roles = "Admin,Supervisor")]
+  public async Task<IActionResult> ApproveRequest(string requestId)
+  {
+    var approverId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ??
+             User.FindFirst("sub")?.Value;
+    var updatedRequest = await _changeRequestService.ApproveRequestAsync(requestId, approverId!);
+    if (updatedRequest == null)
+      return NotFound(new { message = "Request not found" });
+
+    return Ok(updatedRequest);
+  }
+
+  [Authorize (Roles = "Admin")]
   [HttpDelete("{id:length(24)}")] // specify a parameter for action
   public async Task<IActionResult> Delete(string id)
   {
@@ -124,6 +138,7 @@ public class ChangeRequestController : ControllerBase
     return NoContent();
   }
 
+  [Authorize (Roles = "Admin")]
   [HttpDelete("all")]
   public async Task<IActionResult> DeleteAll()
   {

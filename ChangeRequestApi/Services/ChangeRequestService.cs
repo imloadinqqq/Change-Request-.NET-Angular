@@ -45,4 +45,18 @@ public class ChangeRequestService
     var result = await _changeCollection.DeleteManyAsync(FilterDefinition<ChangeRequest>.Empty);
     return result.DeletedCount;
   }
+
+  public async Task<ChangeRequest?> ApproveRequestAsync(string id, string approverId)
+  {
+    var update = Builders<ChangeRequest>.Update
+      .Set(x => x.Status, RequestStatus.Approved)
+      .Set(x => x.ApprovedById, approverId);
+
+    var res = await _changeCollection.FindOneAndUpdateAsync(x => x.Id == id, update, new FindOneAndUpdateOptions<ChangeRequest>
+    {
+      ReturnDocument = ReturnDocument.After
+    });
+
+    return res;
+  }
 }

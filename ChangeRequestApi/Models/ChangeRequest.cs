@@ -55,5 +55,8 @@ namespace ChangeRequestApi.Models
     [BsonRepresentation(BsonType.ObjectId)]
     [JsonPropertyName("Id of Approver")]
     public string? ApprovedById { get; set; }
+
+    // todo
+    //public DateTime? ApprovedDate { get; set; }
   }
 }
