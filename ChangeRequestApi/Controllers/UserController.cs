@@ -24,6 +24,7 @@ public class UserController : ControllerBase
     _jwtSettings = jwtSettings.Value;
   }
 
+  [Authorize]
   [HttpGet("users/{id:length(24)}")]
   public async Task<IActionResult> Get(string id)
   {
@@ -35,8 +36,8 @@ public class UserController : ControllerBase
     return Ok(user);
   }
 
+  [Authorize (Roles = "Admin")]
   [HttpGet("users")]
-  [Authorize(Roles = "Admin")]
   public async Task<ActionResult<List<User>>> GetUsers()
   {
     List<User> users;
@@ -46,8 +47,30 @@ public class UserController : ControllerBase
     return users;
   }
 
+  [Authorize]
+  [HttpGet("users/me")]
+  public async Task<ActionResult<User>> GetCurrentUser()
+  {
+    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ??
+             User.FindFirst("sub")?.Value;
+
+    if (string.IsNullOrEmpty(userId))
+      return Unauthorized();
+
+    var user = await _userService.GetAsync(userId);
+    if (user == null)
+      return NotFound();
+
+    return Ok(new UserProfileObject
+    {
+      Id = user.Id!,
+      Username = user.Username,
+      Type = user.Type
+    });
+  }
+
+  [Authorize (Roles = "Admin")]
   [HttpPatch("users/{id:length(24)}/role")]
-  [Authorize(Roles = "Admin")]
   public async Task<IActionResult> UpdateRole(string id, [FromBody] UpdateRoleObject obj)
   {
     try
@@ -113,8 +136,15 @@ public class UserController : ControllerBase
     });
   }
 
-  [Authorize(Roles = "Admin")]
+  [Authorize (Roles = "Admin")]
   [HttpGet("protected")]
   public IActionResult GetProtected() => Ok("You are an admin!");
 
+  [Authorize (Roles = "Admin")]
+  [HttpGet("users/stats")]
+  public async Task<ActionResult<UserStatsObject>> GetUserStats()
+  {
+    var stats = await _userService.GetUserStatsAsync();
+    return Ok(stats);
+  }
 }

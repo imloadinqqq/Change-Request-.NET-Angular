@@ -56,4 +56,17 @@ namespace ChangeRequestApi.Models
     public string Username { get; set; } = null!;
     public string Password { get; set; } = null!;
   }
+
+  public class UserStatsObject
+  {
+    public int TotalUsers { get; set; }
+    public Dictionary<string, int> UsersByRole { get; set; } = new();
+  }
+
+  public class UserProfileObject
+  {
+    public string Id { get; set; } = null!;
+    public string Username { get; set; } = null!;
+    public UserType Type { get; set; }
+  }
 }

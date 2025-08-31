@@ -80,4 +80,25 @@ public class UserService
 
     return user;
   }
+
+  public async Task<UserStatsObject> GetUserStatsAsync()
+  {
+    var total = await _userCollection.CountDocumentsAsync(FilterDefinition<User>.Empty);
+
+    var groupResult = await _userCollection.Aggregate()
+      .Group(u => u.Type, g => new { Role = g.Key, Count = g.Count() })
+      .ToListAsync();
+
+    var stats = new UserStatsObject
+    {
+      TotalUsers = (int)total
+    };
+
+    foreach (var item in groupResult)
+    {
+      stats.UsersByRole[item.Role.ToString()] = item.Count;
+    }
+
+    return stats;
+  }
 }
