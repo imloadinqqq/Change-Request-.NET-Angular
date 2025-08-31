@@ -19,6 +19,13 @@ export interface User {
   "UserType"?: string | null;
 }
 
+export interface UserStats {
+  totalUsers: number;
+  usersByRole: {
+    [role: string]: number;
+  };
+}
+
 interface UserInfo {
   UserName: string;
   Password: string;
@@ -109,7 +116,7 @@ export class UserService {
 
   getAllUsers(): Observable<User[]> {
     const token = this.getToken();
-    const url = `${this.api_url}/users/all`;
+    const url = `${this.api_url}/users`;
     let headers = new HttpHeaders();
 
     if (token) {
@@ -117,6 +124,19 @@ export class UserService {
     }
 
     return this.http.get<User[]>(url, { headers });
+  }
+
+  getUserStats(): Observable<UserStats> {
+    const token = this.getToken();
+    const url = `${this.api_url}/users/stats`;
+    let headers = new HttpHeaders();
+
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+
+    return this.http.get<UserStats>(url, { headers });
+
   }
 
   isTokenExpired(): boolean {

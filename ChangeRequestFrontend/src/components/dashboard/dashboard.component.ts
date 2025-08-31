@@ -42,4 +42,7 @@ export class DashboardComponent implements OnInit {
     console.log('update');
   }
 
+  viewUserStats() {
+    this.router.navigate(['/userStats']);
+  }
 }

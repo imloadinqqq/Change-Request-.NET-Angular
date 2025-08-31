@@ -5,6 +5,7 @@
 
   <button (click)="navToRequests()">Requests</button>
   <button (click)="viewUsers()">View Users</button>
+  <button (click)="viewUserStats()">View User Stats</button>
 </div>
 <div *ngIf="userType === 'Developer'">
   <h1>Developer Dashboard</h1>
@@ -18,4 +19,7 @@
 
   <button (click)="navToRequests()">Requests</button>
 </div>
-<button (click)="logout()">Logout</button>
+
+<div style="margin-top: 10px;">
+  <button (click)="logout()">Logout</button>
+</div>

@@ -1,0 +1,23 @@
+<div *ngIf="stats; else noStats">
+  <h3>Total Users: {{ stats.totalUsers }}</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Role</th>
+        <th>Count</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let role of getRoles()">
+        <td>{{ role }}</td>
+        <td>{{ stats.usersByRole[role] }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<ng-template #noStats>
+  <p>No stats available.</p>
+</ng-template>
+
+<app-dashboardbutton></app-dashboardbutton>
