@@ -5,6 +5,8 @@ import { LoginComponent } from '../components/login/login.component';
 import { DashboardComponent } from '../components/dashboard/dashboard.component';
 import { authGuard } from './auth.guard';
 import { UserviewComponent } from '../components/userview/userview.component';
+import { NotfoundComponent } from '../components/notfound/notfound.component';
+import { UserstatsComponent } from '../components/userstats/userstats.component';
 
 export const routes: Routes = [
  { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -12,5 +14,7 @@ export const routes: Routes = [
  { path: 'requests', component: RequestsComponent, canActivate: [authGuard] },
  { path: 'createUser', component: CreateuserComponent },
  { path: 'users', component: UserviewComponent, canActivate: [authGuard] },
+ { path: 'userStats', component: UserstatsComponent, canActivate: [authGuard] },
  { path: 'login', component: LoginComponent },
+ { path: '**', component: NotfoundComponent }
 ];

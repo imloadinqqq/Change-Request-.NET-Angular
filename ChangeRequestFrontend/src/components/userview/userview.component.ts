@@ -3,10 +3,11 @@ import { Router, RouterModule } from '@angular/router';
 import { User, UserService } from '../../services/user/user.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { DashboardbuttonComponent } from '../buttons/dashboardbutton/dashboardbutton.component';
 
 @Component({
   selector: 'app-userview',
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, DashboardbuttonComponent],
   templateUrl: './userview.component.html',
   styleUrl: './userview.component.css'
 })

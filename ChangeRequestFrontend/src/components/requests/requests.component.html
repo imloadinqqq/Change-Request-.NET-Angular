@@ -1,10 +1,9 @@
-<div *ngIf="userName">Welcome, {{ userName }}</div>
-<div *ngIf="userType">Role: {{ userType }}</div>
+<!-- <div *ngIf="userName">Welcome, {{ userName }}</div> -->
+<!-- <div *ngIf="userType">Role: {{ userType }}</div> -->
 
 <h2>Change Requests</h2>
-<button (click)="navToDashboard()">Dashboard</button>
 
-<ul>
+<ul *ngIf="requests && requests.length; else noRequests">
   <li *ngFor="let req of requests">
     <strong>ID:</strong> {{ req.Id }}<br>
     <strong>Title:</strong> {{ req.Title }}<br>
@@ -13,5 +12,11 @@
     <strong>Priority:</strong> {{ req.Priority }}<br>
     <strong>Target Date:</strong> {{ req["Target Date"] || 'N/A' }}<br>
     <strong>Approved By:</strong> {{ req["Id of Approver"] || 'Pending' }}
+  </li>
 </ul>
 
+<ng-template #noRequests>
+  <p>No change requests available.</p>
+</ng-template>
+
+<app-dashboardbutton></app-dashboardbutton>

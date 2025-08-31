@@ -2,18 +2,19 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ChangeRequestService, ChangeRequest } from '../../services/change-request/change-request.service';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../services/user/user.service';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { DashboardbuttonComponent } from '../buttons/dashboardbutton/dashboardbutton.component';
 
 @Component({
   selector: 'app-requests',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, DashboardbuttonComponent],
   templateUrl: './requests.component.html',
   styleUrl: './requests.component.css'
 })
 export class RequestsComponent implements OnInit {
   private changeRequestService = inject(ChangeRequestService);
   private userService = inject(UserService);
-  private router = inject(Router);
+
   requests: ChangeRequest[] = [];
   userName: string | null = null;
   userType: string | null = null;
@@ -42,7 +43,4 @@ export class RequestsComponent implements OnInit {
     this.userType = this.userService.getUserType();
   }
 
-  navToDashboard() {
-    this.router.navigate(['/dashboard']);
-  }
 }
