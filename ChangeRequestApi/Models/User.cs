@@ -44,8 +44,15 @@ namespace ChangeRequestApi.Models
   {
     public string Username { get; set; } = null!;
     public string Password { get; set; } = null!;
-    public UserType? Type { get; set; }
   }
+
+  public class RegisterAdminObject
+  {
+    public string Username { get; set; } = null!;
+    public string Password { get; set; } = null!;
+    public UserType Type { get; set; } = UserType.Admin;
+  }
+
 
   public class UpdateRoleObject 
   {

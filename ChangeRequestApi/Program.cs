@@ -136,10 +136,9 @@ using (var scope = app.Services.CreateScope())
     {
       Username = "admin",
       Password = "password1234",
-      Type = UserType.Admin
     };
 
-    await userService.CreateAsync(adminUser);
+    await userService.CreateAdminAsync("admin", "password1234");
     Console.WriteLine("Default admin created: admin / password1234");
   }
 }

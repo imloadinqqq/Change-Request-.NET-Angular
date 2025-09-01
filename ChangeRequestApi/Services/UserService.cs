@@ -32,11 +32,27 @@ public class UserService
     {
       Username = regis.Username,
       Password = BCrypt.Net.BCrypt.HashPassword(regis.Password),
-      Type = regis.Type ?? UserType.Developer
+      Type = UserType.Developer
     };
 
     await _userCollection.InsertOneAsync(newUser);
     return newUser;
+  }
+
+  public async Task<User> CreateAdminAsync(string username, string password)
+  {
+    var existing = await GetByUsernameAsync(username);
+    if (existing != null) return existing;
+
+    var adminUser = new User
+    {
+      Username = username,
+      Password = BCrypt.Net.BCrypt.HashPassword(password),
+      Type = UserType.Admin
+    };
+
+    await _userCollection.InsertOneAsync(adminUser);
+    return adminUser;
   }
 
   public async Task PatchAsync(string id, string newRole)
