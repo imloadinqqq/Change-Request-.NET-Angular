@@ -70,6 +70,24 @@ public class UserController : ControllerBase
   }
 
   [Authorize (Roles = "Admin")]
+  [HttpPost("approve/{id:length(24)}")]
+  public async Task<IActionResult> ApproveUser(string id)
+  {
+    var updatedUser = await _userService.ApproveUserAsync(id);
+
+    if (updatedUser == null)
+      return NotFound("User not found");
+
+    return Ok(new
+    {
+      Id = updatedUser.Id,
+      Username = updatedUser.Username,
+      Type = updatedUser.Type,
+      IsApproved = updatedUser.IsApproved
+    });
+  }
+
+  [Authorize (Roles = "Admin")]
   [HttpPatch("users/{id:length(24)}/role")]
   public async Task<IActionResult> UpdateRole(string id, [FromBody] UpdateRoleObject obj)
   {
@@ -110,6 +128,9 @@ public class UserController : ControllerBase
     var user = await _userService.GetByCredentialsAsync(request.Username, request.Password);
     if (user == null)
         return Unauthorized();
+
+    if (!user.IsApproved)
+      return Unauthorized();
 
     var claims = new[]
     {

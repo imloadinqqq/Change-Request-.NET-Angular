@@ -17,6 +17,7 @@ export interface User {
   "Username": string;
   "Password"?: string;
   "UserType"?: string | null;
+  "IsApproved"?: boolean;
 }
 
 export interface UserStats {
@@ -151,5 +152,16 @@ export class UserService {
     if (!token) return false;
 
     return !this.isTokenExpired();
+  }
+
+  approveUser(id: string)  {
+    const token = this.getToken();
+    let headers = new HttpHeaders();
+
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+
+    return this.http.post(this.api_url + `/approve/${id}`, null, { headers });
   }
 }

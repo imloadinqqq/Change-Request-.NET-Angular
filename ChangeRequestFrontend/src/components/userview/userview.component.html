@@ -4,6 +4,7 @@
     <strong>Username:</strong> {{ user.Username }}<br>
     <strong>Password:</strong> {{ user.Password }}<br>
     <strong>Role:</strong> {{ user.UserType }}<br>
+    <button *ngIf="userType === 'Admin' && !user.IsApproved" (click)="approve(user)">Approve</button>
   </li>
 </ul>
 

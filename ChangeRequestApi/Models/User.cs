@@ -29,6 +29,11 @@ namespace ChangeRequestApi.Models
     [BsonElement("usertype")]
     [JsonPropertyName("UserType")]
     public UserType Type { get; set; } = UserType.Developer;
+
+    [BsonElement("isApproved")]
+    [JsonPropertyName("IsApproved")]
+    public bool IsApproved { get; set; } = false;
+
   }
 
   public class Login

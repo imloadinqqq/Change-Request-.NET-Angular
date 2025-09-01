@@ -32,7 +32,8 @@ public class UserService
     {
       Username = regis.Username,
       Password = BCrypt.Net.BCrypt.HashPassword(regis.Password),
-      Type = UserType.Developer
+      Type = UserType.Developer,
+      IsApproved = false
     };
 
     await _userCollection.InsertOneAsync(newUser);
@@ -48,7 +49,8 @@ public class UserService
     {
       Username = username,
       Password = BCrypt.Net.BCrypt.HashPassword(password),
-      Type = UserType.Admin
+      Type = UserType.Admin,
+      IsApproved = true
     };
 
     await _userCollection.InsertOneAsync(adminUser);
@@ -116,5 +118,19 @@ public class UserService
     }
 
     return stats;
+  }
+
+  public async Task<User?> ApproveUserAsync(string id)
+  {
+    var filter = Builders<User>.Filter.Eq(u => u.Id, id);
+    var update = Builders<User>.Update.Set(u => u.IsApproved, true);
+
+    var options = new FindOneAndUpdateOptions<User>
+    {
+      ReturnDocument = ReturnDocument.After
+    };
+
+    var updatedUser = await _userCollection.FindOneAndUpdateAsync(filter, update, options);
+    return updatedUser;
   }
 }
