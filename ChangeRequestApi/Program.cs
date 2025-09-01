@@ -124,6 +124,26 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+// seed default admin
+using (var scope = app.Services.CreateScope())
+{
+  var userService = scope.ServiceProvider.GetRequiredService<UserService>();
+
+  var allUsers = userService.GetAllAsync().GetAwaiter().GetResult();
+  if (!allUsers.Any())
+  {
+    var adminUser = new RegisterUserObject
+    {
+      Username = "admin",
+      Password = "password1234",
+      Type = UserType.Admin
+    };
+
+    await userService.CreateAsync(adminUser);
+    Console.WriteLine("Default admin created: admin / password1234");
+  }
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

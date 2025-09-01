@@ -32,7 +32,7 @@ public class UserService
     {
       Username = regis.Username,
       Password = BCrypt.Net.BCrypt.HashPassword(regis.Password),
-      Type = UserType.Developer
+      Type = regis.Type ?? UserType.Developer
     };
 
     await _userCollection.InsertOneAsync(newUser);
