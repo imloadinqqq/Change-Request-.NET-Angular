@@ -6,18 +6,21 @@
   <button (click)="navToRequests()">Requests</button>
   <button (click)="viewUsers()">View Users</button>
   <button (click)="viewUserStats()">View User Stats</button>
+  <app-createchangrequestbutton></app-createchangrequestbutton>
 </div>
 <div *ngIf="userType === 'Developer'">
   <h1>Developer Dashboard</h1>
   <app-clock></app-clock>
 
   <button (click)="navToRequests()">Requests</button>
+  <app-createchangrequestbutton></app-createchangrequestbutton>
 </div>
 <div *ngIf="userType === 'Supervisor'">
   Supervisor Dashboard
   <app-clock></app-clock>
 
   <button (click)="navToRequests()">Requests</button>
+  <app-createchangrequestbutton></app-createchangrequestbutton>
 </div>
 
 <div style="margin-top: 10px;">

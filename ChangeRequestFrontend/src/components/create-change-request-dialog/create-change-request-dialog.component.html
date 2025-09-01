@@ -1,0 +1,38 @@
+<h2 mat-dialog-title style="text-align: center">Create Change Request</h2>
+
+<form [formGroup]="requestForm" (ngSubmit)="submitRequest()" style="padding: 16px;">
+  <mat-form-field appearance="fill" style="width: 100%;">
+    <mat-label>Title</mat-label>
+    <input matInput formControlName="title" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" style="width: 100%;">
+    <mat-label>Description</mat-label>
+    <textarea matInput formControlName="description" rows="4"></textarea>
+  </mat-form-field>
+
+  <div style="display: flex; gap: 16px; margin-bottom: 16px;">
+    <mat-form-field appearance="fill" style="flex: 1;">
+      <mat-label>Status</mat-label>
+      <mat-select formControlName="status">
+        <mat-option [value]="0">Open</mat-option>
+        <mat-option [value]="1">In Progress</mat-option>
+        <mat-option [value]="2">Closed</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" style="flex: 1;">
+      <mat-label>Priority</mat-label>
+      <mat-select formControlName="priority">
+        <mat-option [value]="0">Low</mat-option>
+        <mat-option [value]="1">Medium</mat-option>
+        <mat-option [value]="2">High</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div style="display: flex; justify-content: flex-end; gap: 8px;">
+    <button mat-button type="button" (click)="closeDialog()">Cancel</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="requestForm.invalid">Submit</button>
+  </div>
+</form>

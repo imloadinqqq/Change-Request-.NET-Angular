@@ -3,10 +3,11 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { UserService } from '../../services/user/user.service';
 import { ClockComponent } from '../clock/clock.component';
+import { CreatechangrequestbuttonComponent } from '../buttons/createchangrequestbutton/createchangrequestbutton.component';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, RouterModule, ClockComponent],
+  imports: [CommonModule, RouterModule, ClockComponent, CreatechangrequestbuttonComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })

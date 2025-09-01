@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { UserService } from '../user/user.service';
 
 export interface ChangeRequest {
@@ -30,5 +30,18 @@ export class ChangeRequestService {
       headers = headers.set('Authorization', `Bearer ${token}`);
     }
     return this.http.get<ChangeRequest[]>(this.api_url, { headers });
+  }
+
+  createChangeRequest(data: any) {
+    const token = this.userService.getToken();
+    let headers = new HttpHeaders();
+
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+
+    return this.http.post<ChangeRequest>(this.api_url, data, { headers }).pipe(
+      map((res) => res.Id)
+    );
   }
 }
