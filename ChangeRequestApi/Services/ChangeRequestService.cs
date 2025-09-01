@@ -10,8 +10,10 @@ public class ChangeRequestService
 
   public ChangeRequestService(IOptions<ChangeRequestDatabaseSettings> changeRequestDatabaseSettings)
   {
-    var mongoClient = new MongoClient(
-        changeRequestDatabaseSettings.Value.ConnectionString);
+    var connectionString = Environment.GetEnvironmentVariable("MONGO_CONNECTION_STRING") 
+                           ?? changeRequestDatabaseSettings.Value.ConnectionString;
+
+    var mongoClient = new MongoClient(connectionString);
 
     var mongoDatabase = mongoClient.GetDatabase(
         changeRequestDatabaseSettings.Value.DatabaseName);

@@ -29,7 +29,7 @@ builder.Services.AddCors(options => {
   options.AddPolicy(name: MyAllowSpecificOrigins,
                     policy =>
                     {
-                      policy.WithOrigins("http://localhost:4200")
+                      policy.WithOrigins("http://localhost:8080", "http://frontend:8080")
                       .AllowAnyHeader()
                       .AllowAnyMethod()
                       .AllowCredentials();
@@ -135,9 +135,10 @@ if (app.Environment.IsDevelopment())
   });
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 app.UseCors(MyAllowSpecificOrigins);
 
+builder.WebHost.UseUrls("http://0.0.0.0:3000");
 // use our auth service
 app.UseAuthentication();
 app.UseAuthorization();

@@ -37,7 +37,7 @@ interface UserInfo {
 export class UserService {
 
   private tokenKey = 'auth_token';
-  private api_url = 'http://localhost:5163/api';
+  private readonly api_url = 'http://localhost:3000/api';
 
   private http = inject(HttpClient);
 
@@ -60,7 +60,7 @@ export class UserService {
   }
 
   sendUserInfo(data: UserInfo): Observable<UserInfo> {
-    return this.http.post<UserInfo>(this.api_url + '/createUser', data);
+    return this.http.post<UserInfo>(this.api_url + '/register', data);
   }
 
   updateUserRole(userId: string, role: string): Observable<string> {

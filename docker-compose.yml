@@ -1,0 +1,45 @@
+services:
+  mongo:
+    image: mongo:7.0
+    container_name: changerequest-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - app-network
+
+  backend:
+    build: ./ChangeRequestApi
+    container_name: changerequest-backend
+    ports:
+      - "3000:3000"
+    environment:
+      - DOTNET_RUNNING_IN_CONTAINER=true
+      - MONGO_CONNECTION_STRING=mongodb://mongo:27017
+      - DOTNET_URLS=http://0.0.0.0:3000
+    depends_on:
+      - mongo
+    networks:
+      - app-network
+    volumes:
+      - backend-keys:/root/.aspnet/DataProtection-Keys
+
+
+  frontend:
+    build: ./ChangeRequestFrontend
+    container_name: changerequest-frontend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+volumes:
+  mongo-data:
+  backend-keys:
+
+networks:
+  app-network:
+    driver: bridge

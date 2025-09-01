@@ -17,7 +17,7 @@ export interface ChangeRequest {
   providedIn: 'root'
 })
 export class ChangeRequestService {
-  private readonly api_url = 'http://localhost:5163/api/requests'
+  private readonly api_url = 'http://localhost:3000/api/requests'
   private userService = inject(UserService);
   private http = inject(HttpClient);
 

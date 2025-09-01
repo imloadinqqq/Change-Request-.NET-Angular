@@ -10,11 +10,11 @@ public class UserService
 
   public UserService(IOptions<UserDatabaseSettings> userDatabaseSettings)
   {
-    var mongoClient = new MongoClient(
-        userDatabaseSettings.Value.ConnectionString);
+    var connectionString = Environment.GetEnvironmentVariable("MONGO_CONNECTION_STRING") 
+                           ?? userDatabaseSettings.Value.ConnectionString;
 
-    var mongoDatabase = mongoClient.GetDatabase(
-        userDatabaseSettings.Value.DatabaseName);
+    var mongoClient = new MongoClient(connectionString);
+    var mongoDatabase = mongoClient.GetDatabase(userDatabaseSettings.Value.DatabaseName);
 
     _userCollection = mongoDatabase.GetCollection<User>(
         userDatabaseSettings.Value.UserCollectionName);
