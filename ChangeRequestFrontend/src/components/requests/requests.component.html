@@ -6,6 +6,7 @@
 <ul *ngIf="requests && requests.length; else noRequests">
   <li *ngFor="let req of requests">
     <strong>ID:</strong> {{ req.Id }}<br>
+    <strong>User ID of creator:</strong> {{ req.UserId }}<br>
     <strong>Title:</strong> {{ req.Title }}<br>
     <strong>Description:</strong> {{ req.Description }}<br>
     <strong>Status:</strong> {{ req.Status }}<br>

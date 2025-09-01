@@ -5,6 +5,7 @@ import { UserService } from '../user/user.service';
 
 export interface ChangeRequest {
   "Id"?: string;
+  "UserId"?: string;
   "Title": string;
   "Description": string;
   "Status": number;
@@ -32,16 +33,13 @@ export class ChangeRequestService {
     return this.http.get<ChangeRequest[]>(this.api_url, { headers });
   }
 
-  createChangeRequest(data: any) {
+  createChangeRequest(request: Omit<ChangeRequest, 'Id' | 'UserId' | 'Username'>): Observable<string> {
     const token = this.userService.getToken();
     let headers = new HttpHeaders();
+    if (token) headers = headers.set('Authorization', `Bearer ${token}`);
 
-    if (token) {
-      headers = headers.set('Authorization', `Bearer ${token}`);
-    }
-
-    return this.http.post<ChangeRequest>(this.api_url, data, { headers }).pipe(
-      map((res) => res.Id)
+    return this.http.post<ChangeRequest>(this.api_url, request, { headers }).pipe(
+      map(res => res.Id!)
     );
   }
 }
