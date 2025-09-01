@@ -13,6 +13,11 @@
     <strong>Priority:</strong> {{ req.Priority }}<br>
     <strong>Target Date:</strong> {{ req["Target Date"] || 'N/A' }}<br>
     <strong>Approved By:</strong> {{ req["Id of Approver"] || 'Pending' }}
+  <app-approve-change-request-button
+    *ngIf="userType === 'Admin' && req.Status.toString() !== 'Approved'"
+    [requestId]="req.Id!"
+    (approved)="loadRequests()">
+  </app-approve-change-request-button>
   </li>
 </ul>
 

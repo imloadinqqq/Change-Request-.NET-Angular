@@ -7,8 +7,8 @@ import { CreateChangeRequestDialogComponent } from '../../create-change-request-
 @Component({
   selector: 'app-createchangrequestbutton',
   imports: [CommonModule, MatButtonModule],
-  templateUrl: './createchangrequestbutton.component.html',
-  styleUrl: './createchangrequestbutton.component.css'
+  templateUrl: './create-change-request-button.component.html',
+  styleUrl: './create-change-request-button.component.css'
 })
 export class CreatechangrequestbuttonComponent {
   private dialog = inject(MatDialog);

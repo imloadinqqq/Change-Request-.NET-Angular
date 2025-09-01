@@ -13,23 +13,22 @@
 
   <div style="display: flex; gap: 16px; margin-bottom: 16px;">
     <mat-form-field appearance="fill" style="flex: 1;">
-      <mat-label>Status</mat-label>
-      <mat-select formControlName="status">
-        <mat-option [value]="0">Open</mat-option>
-        <mat-option [value]="1">In Progress</mat-option>
-        <mat-option [value]="2">Closed</mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <mat-form-field appearance="fill" style="flex: 1;">
       <mat-label>Priority</mat-label>
       <mat-select formControlName="priority">
         <mat-option [value]="0">Low</mat-option>
         <mat-option [value]="1">Medium</mat-option>
         <mat-option [value]="2">High</mat-option>
+        <mat-option [value]="3">Critical</mat-option>
       </mat-select>
     </mat-form-field>
   </div>
+
+  <mat-form-field appearance="fill" style="width: 100%; margin-bottom: 16px;">
+    <mat-label>Target Date</mat-label>
+    <input matInput [matDatepicker]="targetPicker" formControlName="targetDate" />
+    <mat-datepicker-toggle matSuffix [for]="targetPicker"></mat-datepicker-toggle>
+    <mat-datepicker #targetPicker></mat-datepicker>
+  </mat-form-field>
 
   <div style="display: flex; justify-content: flex-end; gap: 8px;">
     <button mat-button type="button" (click)="closeDialog()">Cancel</button>

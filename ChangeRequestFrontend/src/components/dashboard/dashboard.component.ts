@@ -3,7 +3,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { UserService } from '../../services/user/user.service';
 import { ClockComponent } from '../clock/clock.component';
-import { CreatechangrequestbuttonComponent } from '../buttons/createchangrequestbutton/createchangrequestbutton.component';
+import { CreatechangrequestbuttonComponent } from '../buttons/create-change-request-button/create-change-request-button.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,7 +19,7 @@ export class DashboardComponent implements OnInit {
   userName: string | null = null;
 
   ngOnInit(): void {
-      this.loadDashBoard();
+    this.loadDashBoard();
   }
 
   loadDashBoard(): void {

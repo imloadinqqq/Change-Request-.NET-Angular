@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { UserService, UserStats } from '../../services/user/user.service';
-import { DashboardbuttonComponent } from '../buttons/dashboardbutton/dashboardbutton.component';
+import { DashboardbuttonComponent } from '../buttons/dashboard-button/dashboard-button.component';
 
 @Component({
   selector: 'app-userstats',

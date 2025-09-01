@@ -1,17 +1,21 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatNativeDateModule } from '@angular/material/core';
 import { ChangeRequestService, ChangeRequest } from '../../services/change-request/change-request.service';
 
 @Component({
   selector: 'app-create-change-request-dialog',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatButtonModule, MatInputModule, MatSelectModule],
+  imports: [CommonModule, ReactiveFormsModule, MatButtonModule, MatInputModule, MatSelectModule, MatDatepickerModule, MatNativeDateModule, MatFormFieldModule, MatIconModule],
   templateUrl: './create-change-request-dialog.component.html',
   styleUrls: ['./create-change-request-dialog.component.css']
 })
@@ -24,8 +28,8 @@ export class CreateChangeRequestDialogComponent {
   requestForm = this.fb.group({
       title: ['', Validators.required],
       description: ['', Validators.required],
-      status: [0, Validators.required],
       priority: [1, Validators.required],
+      targetDate: [null]
     });
 
 
@@ -41,8 +45,12 @@ export class CreateChangeRequestDialogComponent {
       const newRequest: ChangeRequest = {
         Title: this.requestForm.value.title!,
         Description: this.requestForm.value.description!,
-        Status: this.requestForm.value.status!,
+        Status: 0,
         Priority: this.requestForm.value.priority!,
+        "Target Date": this.requestForm.value.targetDate
+          ? new Date(this.requestForm.value.targetDate)
+          : undefined
+
       };
 
       this.changeRequestService.createChangeRequest(newRequest).subscribe({

@@ -4,8 +4,8 @@ import { Router, RouterModule } from '@angular/router';
 @Component({
   selector: 'app-dashboardbutton',
   imports: [RouterModule],
-  templateUrl: './dashboardbutton.component.html',
-  styleUrl: './dashboardbutton.component.css'
+  templateUrl: './dashboard-button.component.html',
+  styleUrl: './dashboard-button.component.css'
 })
 export class DashboardbuttonComponent {
   private router = inject(Router);

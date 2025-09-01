@@ -10,7 +10,7 @@ export interface ChangeRequest {
   "Description": string;
   "Status": number;
   "Priority": number;
-  "Target Date"?: string;
+  "Target Date"?: Date;
   "Id of Approver"?: string | null;
 }
 
@@ -33,12 +33,22 @@ export class ChangeRequestService {
     return this.http.get<ChangeRequest[]>(this.api_url, { headers });
   }
 
-  createChangeRequest(request: Omit<ChangeRequest, 'Id' | 'UserId' | 'Username'>): Observable<string> {
+  createChangeRequest(request: Omit<ChangeRequest, 'Id' | 'UserId'>): Observable<string> {
     const token = this.userService.getToken();
     let headers = new HttpHeaders();
     if (token) headers = headers.set('Authorization', `Bearer ${token}`);
 
     return this.http.post<ChangeRequest>(this.api_url, request, { headers }).pipe(
+      map(res => res.Id!)
+    );
+  }
+
+  approveChangeRequest(requestId: string) {
+    const token = this.userService.getToken();
+    let headers = new HttpHeaders();
+    if (token) headers = headers.set('Authorization', `Bearer ${token}`);
+
+    return this.http.post<ChangeRequest>(`${this.api_url}/${requestId}/approve`, null, { headers }).pipe(
       map(res => res.Id!)
     );
   }

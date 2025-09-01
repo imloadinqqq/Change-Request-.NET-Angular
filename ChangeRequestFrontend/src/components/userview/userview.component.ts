@@ -1,9 +1,9 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { User, UserService } from '../../services/user/user.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DashboardbuttonComponent } from '../buttons/dashboardbutton/dashboardbutton.component';
+import { DashboardbuttonComponent } from '../buttons/dashboard-button/dashboard-button.component';
 
 @Component({
   selector: 'app-userview',
