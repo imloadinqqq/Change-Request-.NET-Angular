@@ -16,7 +16,7 @@
     <div class="mt-3" *ngIf="userType === 'Admin' && user.Id !== loggedInUserId">
       <app-update-user-button-toggle
         [userId]="user.Id"
-        [currentRole]="user.UserType ?? 'developer'">
+        (roleChanged)="fetchUsers()">
       </app-update-user-button-toggle>
     </div>
   </li>

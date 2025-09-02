@@ -14,7 +14,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class UpdateUserButtonToggleComponent implements OnInit {
   @Input() userId!: string | undefined;
   @Input() currentRole!: string | undefined;
-  @Output() roleChanged = new EventEmitter<string>();
+  @Output() roleChanged = new EventEmitter<void>();
   selectedRole: string = 'developer';
 
   private snackBar = inject(MatSnackBar);
@@ -35,7 +35,7 @@ onRoleChange() {
           horizontalPosition: 'center',
           verticalPosition: 'top',
         });
-        this.roleChanged.emit(this.selectedRole);
+        this.roleChanged.emit();
       },
       error: (err) => {
         console.error('Failed to update role', err);
