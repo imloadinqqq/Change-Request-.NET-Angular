@@ -1,23 +1,30 @@
-<div *ngIf="stats; else noStats">
-  <h3>Total Users: {{ stats.totalUsers }}</h3>
-  <table>
-    <thead>
-      <tr>
-        <th>Role</th>
-        <th>Count</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let role of getRoles()">
-        <td>{{ role }}</td>
-        <td>{{ stats.usersByRole[role] }}</td>
-      </tr>
-    </tbody>
-  </table>
+<div *ngIf="stats; else noStats" class="max-w-md mx-auto bg-white shadow-lg rounded-xl p-6 space-y-4">
+  <h3 class="text-xl font-semibold text-gray-700 text-center mb-4">User Statistics</h3>
+
+  <p class="text-gray-600 font-medium text-center">Total Users: <span class="font-bold text-gray-800">{{ stats.totalUsers }}</span></p>
+
+  <div class="overflow-x-auto">
+    <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+      <thead>
+        <tr class="bg-gray-100">
+          <th class="px-4 py-2 text-left text-gray-700 font-semibold border-b">Role</th>
+          <th class="px-4 py-2 text-left text-gray-700 font-semibold border-b">Count</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let role of getRoles()" class="hover:bg-gray-50">
+          <td class="px-4 py-2 border-b text-gray-700">{{ role }}</td>
+          <td class="px-4 py-2 border-b text-gray-700 font-medium">{{ stats.usersByRole[role] }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <ng-template #noStats>
-  <p>No stats available.</p>
+  <p class="text-center text-gray-500 mt-4">No stats available.</p>
 </ng-template>
 
-<app-dashboardbutton></app-dashboardbutton>
+<div class="mt-6 max-w-2xl w-full mx-auto">
+  <app-dashboardbutton></app-dashboardbutton>
+</div>

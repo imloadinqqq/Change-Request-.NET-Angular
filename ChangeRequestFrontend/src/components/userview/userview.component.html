@@ -1,11 +1,21 @@
-<ul>
-  <li *ngFor="let user of users">
-    <strong>ID:</strong> {{ user.Id }}<br>
-    <strong>Username:</strong> {{ user.Username }}<br>
-    <strong>Password:</strong> {{ user.Password }}<br>
-    <strong>Role:</strong> {{ user.UserType }}<br>
-    <button *ngIf="userType === 'Admin' && !user.IsApproved" (click)="approve(user)">Approve</button>
+<ul class="space-y-4 max-w-2xl mx-auto">
+  <li *ngFor="let user of users"
+      class="bg-white shadow-md rounded-lg p-4 border border-gray-200">
+    <p><span class="font-semibold text-gray-700">ID:</span> {{ user.Id }}</p>
+    <p><span class="font-semibold text-gray-700">Username:</span> {{ user.Username }}</p>
+    <p><span class="font-semibold text-gray-700">Password:</span> {{ user.Password }}</p>
+    <p><span class="font-semibold text-gray-700">Role:</span> {{ user.UserType }}</p>
+
+    <div class="mt-3" *ngIf="userType === 'Admin' && !user.IsApproved">
+      <button
+        (click)="approve(user)"
+        class="w-full bg-green-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-600 transition-colors duration-200">
+        Approve
+      </button>
+    </div>
   </li>
 </ul>
 
-<app-dashboardbutton></app-dashboardbutton>
+<div class="mt-6 max-w-2xl w-full mx-auto">
+  <app-dashboardbutton></app-dashboardbutton>
+</div>

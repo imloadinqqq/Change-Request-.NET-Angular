@@ -1,28 +1,56 @@
-<!-- <div *ngIf="userName">Welcome, {{ userName }}</div> -->
-<!-- <div *ngIf="userType">Role: {{ userType }}</div> -->
+<h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Change Requests</h2>
 
-<h2>Change Requests</h2>
+<ul *ngIf="requests && requests.length; else noRequests" class="space-y-4 max-w-2xl mx-auto">
+  <li *ngFor="let req of requests"
+      class="bg-white shadow-md rounded-lg p-4 border border-gray-200">
 
-<ul *ngIf="requests && requests.length; else noRequests">
-  <li *ngFor="let req of requests">
-    <strong>ID:</strong> {{ req.Id }}<br>
-    <strong>User ID of creator:</strong> {{ req.UserId }}<br>
-    <strong>Title:</strong> {{ req.Title }}<br>
-    <strong>Description:</strong> {{ req.Description }}<br>
-    <strong>Status:</strong> {{ req.Status }}<br>
-    <strong>Priority:</strong> {{ req.Priority }}<br>
-    <strong>Target Date:</strong> {{ req["Target Date"] || 'N/A' }}<br>
-    <strong>Approved By:</strong> {{ req["Id of Approver"] || 'Pending' }}
-  <app-approve-change-request-button
-    *ngIf="userType === 'Admin' && req.Status.toString() !== 'Approved'"
-    [requestId]="req.Id!"
-    (approved)="loadRequests()">
-  </app-approve-change-request-button>
+    <p><span class="font-semibold text-gray-700">ID:</span> {{ req.Id }}</p>
+    <p><span class="font-semibold text-gray-700">User ID of creator:</span> {{ req.UserId }}</p>
+    <p><span class="font-semibold text-gray-700">Title:</span> {{ req.Title }}</p>
+    <p><span class="font-semibold text-gray-700">Description:</span> {{ req.Description }}</p>
+
+    <p>
+      <span class="font-semibold text-gray-700">Status:</span>
+      <span [ngClass]="{
+        'text-green-600 font-bold': req.Status.toString() === 'Approved',
+        'text-yellow-600 font-bold': req.Status.toString() === 'Pending',
+        'text-red-600 font-bold': req.Status.toString() === 'Rejected',
+        'text-blue-600 font-bold': req.Status.toString() === 'InProgress',
+        'text-gray-600 font-bold': req.Status.toString() === 'Completed'
+      }">
+        {{ req.Status }}
+      </span>
+    </p>
+
+    <p>
+      <span class="font-semibold text-gray-700">Priority:</span>
+      <span [ngClass]="{
+        'text-green-600 font-bold': req.Priority.toString() === 'Low',
+        'text-yellow-600 font-bold': req.Priority.toString() === 'Medium',
+        'text-red-600 font-bold': req.Priority.toString() === 'High',
+        'text-purple-600 font-bold': req.Priority.toString() === 'Critical'
+      }">
+        {{ req.Priority }}
+      </span>
+    </p>
+
+    <p><span class="font-semibold text-gray-700">Target Date:</span> {{ req['Target Date'] || 'N/A' }}</p>
+    <p><span class="font-semibold text-gray-700">Approved By:</span> {{ req['Id of Approver'] || 'Pending' }}</p>
+
+    <div class="mt-3" *ngIf="userType === 'Admin' && req.Status.toString() !== 'Approved'">
+      <app-approve-change-request-button
+        [requestId]="req.Id!"
+        (approved)="loadRequests()">
+      </app-approve-change-request-button>
+    </div>
+
   </li>
 </ul>
 
 <ng-template #noRequests>
-  <p>No change requests available.</p>
+  <p class="text-center text-gray-500 mt-6">No change requests available.</p>
 </ng-template>
 
-<app-dashboardbutton></app-dashboardbutton>
+<div class="mt-6 max-w-2xl w-full mx-auto">
+  <app-dashboardbutton></app-dashboardbutton>
+</div>

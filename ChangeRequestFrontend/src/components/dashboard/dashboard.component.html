@@ -1,28 +1,41 @@
-<h2>Hello, {{ userName }}</h2>
-<div *ngIf="userType === 'Admin'">
-  <h1>Admin Dashboard</h1>
-  <app-clock></app-clock>
+<h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Hello, {{ userName }}</h2>
 
-  <button (click)="navToRequests()">Requests</button>
-  <button (click)="viewUsers()">View Users</button>
-  <button (click)="viewUserStats()">View User Stats</button>
-  <app-createchangrequestbutton></app-createchangrequestbutton>
-</div>
-<div *ngIf="userType === 'Developer'">
-  <h1>Developer Dashboard</h1>
-  <app-clock></app-clock>
+<!-- Admin -->
+<div *ngIf="userType === 'Admin'" class="max-w-md mx-auto bg-white shadow-lg rounded-xl p-6 space-y-4">
+  <h1 class="text-xl font-semibold text-gray-700 text-center">Admin Dashboard</h1>
+  <app-clock class="mx-auto mb-4"></app-clock>
 
-  <button (click)="navToRequests()">Requests</button>
-  <app-createchangrequestbutton></app-createchangrequestbutton>
-</div>
-<div *ngIf="userType === 'Supervisor'">
-  Supervisor Dashboard
-  <app-clock></app-clock>
-
-  <button (click)="navToRequests()">Requests</button>
-  <app-createchangrequestbutton></app-createchangrequestbutton>
+  <div class="space-y-3">
+    <button class="w-full bg-gray-100 text-gray-800 font-semibold py-2 rounded-lg hover:bg-gray-200 transition" (click)="navToRequests()">Requests</button>
+    <button class="w-full bg-gray-100 text-gray-800 font-semibold py-2 rounded-lg hover:bg-gray-200 transition" (click)="viewUsers()">View Users</button>
+    <button class="w-full bg-gray-100 text-gray-800 font-semibold py-2 rounded-lg hover:bg-gray-200 transition" (click)="viewUserStats()">View User Stats</button>
+    <app-createchangrequestbutton class="w-full mt-2"></app-createchangrequestbutton>
+  </div>
 </div>
 
-<div style="margin-top: 10px;">
-  <button (click)="logout()">Logout</button>
+<!-- Developer -->
+<div *ngIf="userType === 'Developer'" class="max-w-md mx-auto bg-white shadow-lg rounded-xl p-6 space-y-4">
+  <h1 class="text-xl font-semibold text-gray-700 text-center">Developer Dashboard</h1>
+  <app-clock class="mx-auto mb-4"></app-clock>
+
+  <div class="space-y-3">
+    <button class="w-full bg-gray-100 text-gray-800 font-semibold py-2 rounded-lg hover:bg-gray-200 transition" (click)="navToRequests()">Requests</button>
+    <app-createchangrequestbutton class="w-full mt-2"></app-createchangrequestbutton>
+  </div>
+</div>
+
+<!-- Supervisor -->
+<div *ngIf="userType === 'Supervisor'" class="max-w-md mx-auto bg-white shadow-lg rounded-xl p-6 space-y-4">
+  <h1 class="text-xl font-semibold text-gray-700 text-center">Supervisor Dashboard</h1>
+  <app-clock class="mx-auto mb-4"></app-clock>
+
+  <div class="space-y-3">
+    <button class="w-full bg-gray-100 text-gray-800 font-semibold py-2 rounded-lg hover:bg-gray-200 transition" (click)="navToRequests()">Requests</button>
+    <app-createchangrequestbutton class="w-full mt-2"></app-createchangrequestbutton>
+  </div>
+</div>
+
+<!-- Logout -->
+<div class="max-w-md mx-auto mt-6">
+  <button class="w-full bg-red-500 text-white font-semibold py-2 rounded-lg hover:bg-red-600 transition" (click)="logout()">Logout</button>
 </div>
