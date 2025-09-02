@@ -1,0 +1,12 @@
+<mat-button-toggle-group [(ngModel)]="selectedRole">
+  <mat-button-toggle value="developer">Developer</mat-button-toggle>
+  <mat-button-toggle value="supervisor">Supervisor</mat-button-toggle>
+  <mat-button-toggle value="admin">Admin</mat-button-toggle>
+</mat-button-toggle-group>
+<br>
+
+<button
+  (click)="onRoleChange()"
+  class="mt-2 bg-blue-500 text-white font-semibold py-1 px-3 rounded hover:bg-blue-600">
+  Update Role
+</button>

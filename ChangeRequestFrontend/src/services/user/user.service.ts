@@ -66,7 +66,16 @@ export class UserService {
 
   updateUserRole(userId: string, role: string): Observable<string> {
     const url = `${this.api_url}/users/${userId}/role`;
-    return this.http.patch<string>(url, { role });
+
+    const token = this.getToken();
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+
+    const body = { newRole: role };
+
+    return this.http.patch(url, body, { headers, responseType: 'text' });
   }
 
   // called after successful login (200 status)
