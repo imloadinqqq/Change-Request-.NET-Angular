@@ -5,10 +5,11 @@ import { UserService } from '../../services/user/user.service';
 import { RouterModule } from '@angular/router';
 import { DashboardbuttonComponent } from '../buttons/dashboard-button/dashboard-button.component';
 import { ApproveChangeRequestButtonComponent } from '../buttons/approve-change-request-button/approve-change-request-button.component';
+import { RejectChangeRequestButtonComponent } from '../buttons/reject-change-request-button/reject-change-request-button.component';
 
 @Component({
   selector: 'app-requests',
-  imports: [CommonModule, RouterModule, DashboardbuttonComponent, ApproveChangeRequestButtonComponent],
+  imports: [CommonModule, RouterModule, DashboardbuttonComponent, ApproveChangeRequestButtonComponent, RejectChangeRequestButtonComponent],
   templateUrl: './requests.component.html',
   styleUrl: './requests.component.css'
 })

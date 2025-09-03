@@ -61,4 +61,18 @@ public class ChangeRequestService
 
     return res;
   }
+
+  public async Task<ChangeRequest?> RejectRequestAsync(string id, string approverId)
+  {
+    var update = Builders<ChangeRequest>.Update
+      .Set(x => x.Status, RequestStatus.Rejected)
+      .Set(x => x.ApprovedById, approverId);
+
+    var res = await _changeCollection.FindOneAndUpdateAsync(x => x.Id == id, update, new FindOneAndUpdateOptions<ChangeRequest>
+    {
+      ReturnDocument = ReturnDocument.After
+    });
+
+    return res;
+  }
 }

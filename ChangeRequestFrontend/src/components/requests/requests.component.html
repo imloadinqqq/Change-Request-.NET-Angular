@@ -37,12 +37,19 @@
     <p><span class="font-semibold text-gray-700">Target Date:</span> {{ req['Target Date'] || 'N/A' }}</p>
     <p><span class="font-semibold text-gray-700">Approved By:</span> {{ req['Id of Approver'] || 'Pending' }}</p>
 
-    <div class="mt-3" *ngIf="userType === 'Admin' && req.Status.toString() !== 'Approved'">
+    <div class="mt-3" *ngIf="userType === 'Admin' && req.Status.toString() !== 'Approved' && req.Status.toString() !== 'Rejected'">
       <app-approve-change-request-button
         [requestId]="req.Id!"
         (approved)="loadRequests()">
       </app-approve-change-request-button>
     </div>
+    <div class="mt-3" *ngIf="userType === 'Admin' && req.Status.toString() !== 'Approved' && req.Status.toString() !== 'Rejected'">
+      <app-reject-change-request-button
+        [requestId]="req.Id!"
+        (rejected)="loadRequests()">
+      </app-reject-change-request-button>
+    </div>
+
 
   </li>
 </ul>

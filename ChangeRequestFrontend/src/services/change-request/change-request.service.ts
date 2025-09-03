@@ -52,4 +52,14 @@ export class ChangeRequestService {
       map(res => res.Id!)
     );
   }
+
+  rejectChangeRequest(requestId: string) {
+    const token = this.userService.getToken();
+    let headers = new HttpHeaders();
+    if (token) headers = headers.set('Authorization', `Bearer ${token}`);
+
+    return this.http.post<ChangeRequest>(`${this.api_url}/${requestId}/reject`, null, { headers }).pipe(
+      map(res => res.Id!)
+    );
+  }
 }
