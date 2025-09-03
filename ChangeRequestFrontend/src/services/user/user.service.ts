@@ -1,7 +1,7 @@
 import { jwtDecode } from 'jwt-decode';
 import { inject, Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { catchError, Observable, tap, throwError } from 'rxjs';
 
 interface JwtPayload {
   sub: string;
@@ -56,6 +56,9 @@ export class UserService {
           localStorage.setItem(this.tokenKey, res.token);
           localStorage.setItem('username', res.user.username);
         }
+      }),
+      catchError((error: HttpErrorResponse) => {
+        return throwError(() => error);
       })
     );
   }

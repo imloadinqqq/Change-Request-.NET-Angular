@@ -130,7 +130,7 @@ public class UserController : ControllerBase
         return Unauthorized();
 
     if (!user.IsApproved)
-      return Unauthorized();
+      return Forbid();
 
     var claims = new[]
     {
