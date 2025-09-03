@@ -7,6 +7,7 @@ namespace ChangeRequestApi.Services;
 public class ChangeRequestService
 {
   private readonly IMongoCollection<ChangeRequest> _changeCollection;
+  public static int Count = 0;
 
   public ChangeRequestService(IOptions<ChangeRequestDatabaseSettings> changeRequestDatabaseSettings)
   {
@@ -24,32 +25,46 @@ public class ChangeRequestService
 
   // CRUD operations
 
-  public async Task<List<ChangeRequest>> GetAsync() =>
-    await _changeCollection.Find(_ => true).ToListAsync();
+  public async Task<List<ChangeRequest>> GetAsync() {
+    Interlocked.Increment(ref Count);
+    return await _changeCollection.Find(_ => true).ToListAsync();
+  }
 
-  public async Task<ChangeRequest?> GetAsync(string id) =>
-    await _changeCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+  public async Task<ChangeRequest?> GetAsync(string id) {
+    Interlocked.Increment(ref Count);
+    return await _changeCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+  }
 
-  public async Task<List<ChangeRequest>> GetByUserIdAsync(string userId) =>
-    await _changeCollection.Find(x => x.UserId == userId).ToListAsync();
+  public async Task<List<ChangeRequest>> GetByUserIdAsync(string userId) {
+    Interlocked.Increment(ref Count);
+    return await _changeCollection.Find(x => x.UserId == userId).ToListAsync();
+  }
 
-  public async Task CreateAsync(ChangeRequest newRequest) =>
+  public async Task CreateAsync(ChangeRequest newRequest) {
+    Interlocked.Increment(ref Count);
     await _changeCollection.InsertOneAsync(newRequest);
+  }
 
-  public async Task UpdateAsync(string id, ChangeRequest updatedRequest) =>
+  public async Task UpdateAsync(string id, ChangeRequest updatedRequest) {
+    Interlocked.Increment(ref Count);
     await _changeCollection.ReplaceOneAsync(x => x.Id == id, updatedRequest);
+  }
 
-  public async Task RemoveAsync(string id) =>
+  public async Task RemoveAsync(string id) {
+    Interlocked.Increment(ref Count);
     await _changeCollection.DeleteOneAsync(x => x.Id == id);
+  }
 
   public async Task<long> DeleteAllAsync()
   {
+    Interlocked.Increment(ref Count);
     var result = await _changeCollection.DeleteManyAsync(FilterDefinition<ChangeRequest>.Empty);
     return result.DeletedCount;
   }
 
   public async Task<ChangeRequest?> ApproveRequestAsync(string id, string approverId)
   {
+    Interlocked.Increment(ref Count);
     var update = Builders<ChangeRequest>.Update
       .Set(x => x.Status, RequestStatus.Approved)
       .Set(x => x.ApprovedById, approverId);
@@ -64,6 +79,7 @@ public class ChangeRequestService
 
   public async Task<ChangeRequest?> RejectRequestAsync(string id, string approverId)
   {
+    Interlocked.Increment(ref Count);
     var update = Builders<ChangeRequest>.Update
       .Set(x => x.Status, RequestStatus.Rejected)
       .Set(x => x.ApprovedById, approverId);

@@ -200,16 +200,33 @@ app.MapHealthChecks("/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks
   {
     context.Response.ContentType = "application/json";
     var uptime = DateTime.UtcNow - appStartTime;
+    int? totalHttpRequestCount = ChangeRequestService.Count + UserService.Count;
+
+    var checks = report.Entries.Select(e => 
+    {
+      int? httpRequestCount = null;
+
+      if (e.Key == "change-request-mongodb")
+        httpRequestCount = ChangeRequestService.Count;
+
+      if (e.Key == "user-mongodb")
+        httpRequestCount = UserService.Count;
+
+        return new {
+          name = e.Key,
+          status = e.Value.Status.ToString(),
+          exception = e.Value.Exception?.Message,
+          httpRequests = httpRequestCount,
+          duration = e.Value.Duration.ToString()
+        };
+    });
+
     var result = JsonSerializer.Serialize(new
     {
       status = report.Status.ToString(),
       uptime = uptime.ToString(@"dd\.hh\:mm\:ss"),
-      checks = report.Entries.Select(e => new {
-        name = e.Key,
-        status = e.Value.Status.ToString(),
-        exception = e.Value.Exception?.Message,
-        duration = e.Value.Duration.ToString()
-      })
+      totalHttpRequests = totalHttpRequestCount,
+      checks
     });
     await context.Response.WriteAsync(result);
   }

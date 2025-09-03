@@ -7,6 +7,7 @@ namespace ChangeRequestApi.Services;
 public class UserService
 {
   private readonly IMongoCollection<User> _userCollection;
+  public static int Count = 0; 
 
   public UserService(IOptions<UserDatabaseSettings> userDatabaseSettings)
   {
@@ -20,14 +21,19 @@ public class UserService
         userDatabaseSettings.Value.UserCollectionName);
   }
 
-  public async Task<User?> GetAsync(string id) =>
-    await _userCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+  public async Task<User?> GetAsync(string id) {
+    Interlocked.Increment(ref Count);
+    return await _userCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+  }
 
-  public async Task<List<User>> GetAllAsync() =>
-    await _userCollection.Find(_ => true).ToListAsync();
+  public async Task<List<User>> GetAllAsync() {
+    Interlocked.Increment(ref Count);
+    return await _userCollection.Find(_ => true).ToListAsync();
+  }
 
   public async Task<User> CreateAsync(RegisterUserObject regis)
   {
+    Interlocked.Increment(ref Count);
     var newUser = new User
     {
       Username = regis.Username,
@@ -42,6 +48,7 @@ public class UserService
 
   public async Task<User> CreateAdminAsync(string username, string password)
   {
+    Interlocked.Increment(ref Count);
     var existing = await GetByUsernameAsync(username);
     if (existing != null) return existing;
 
@@ -59,6 +66,7 @@ public class UserService
 
   public async Task PatchAsync(string id, string newRole)
   {
+    Interlocked.Increment(ref Count);
     if (!Enum.TryParse<UserType>(newRole, ignoreCase: true, out var roleEnum))
     {
       throw new ArgumentException("Invalid role type");
@@ -79,19 +87,21 @@ public class UserService
 
   public async Task<User?> GetByCredentialsAsync(string username, string password)
   {
-      var user = await _userCollection.Find(u => u.Username == username).FirstOrDefaultAsync();
+    Interlocked.Increment(ref Count);
+    var user = await _userCollection.Find(u => u.Username == username).FirstOrDefaultAsync();
 
-      if (user is null) 
-          return null;
+    if (user is null) 
+        return null;
 
-      if (!BCrypt.Net.BCrypt.Verify(password, user.Password))
-          return null;
+    if (!BCrypt.Net.BCrypt.Verify(password, user.Password))
+        return null;
 
-      return user;
+    return user;
   }
 
   public async Task<User?> GetByUsernameAsync(string username)
   {
+    Interlocked.Increment(ref Count);
     var user = await _userCollection.Find(u => u.Username == username).FirstOrDefaultAsync();
     if (user is null)
       return null;
@@ -101,6 +111,7 @@ public class UserService
 
   public async Task<UserStatsObject> GetUserStatsAsync()
   {
+    Interlocked.Increment(ref Count);
     var total = await _userCollection.CountDocumentsAsync(FilterDefinition<User>.Empty);
 
     var groupResult = await _userCollection.Aggregate()
@@ -122,6 +133,7 @@ public class UserService
 
   public async Task<User?> ApproveUserAsync(string id)
   {
+    Interlocked.Increment(ref Count);
     var filter = Builders<User>.Filter.Eq(u => u.Id, id);
     var update = Builders<User>.Update.Set(u => u.IsApproved, true);
 
