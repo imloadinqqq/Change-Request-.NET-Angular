@@ -1,14 +1,20 @@
 using ChangeRequestApi.Models;
 using ChangeRequestApi.Services;
 using ChangeRequestApi.Auth;
+using ChangeRequestApi.Health;
 using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using System.Text;
+
+
+var appStartTime = DateTime.UtcNow;
 
 var builder = WebApplication.CreateBuilder(args);
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -36,8 +42,34 @@ builder.Services.AddCors(options => {
                     });
 });
 
+// 
 builder.Services.AddSingleton<ChangeRequestService>();
 builder.Services.AddSingleton<UserService>();
+
+builder.Services.AddSingleton<UserMongoClient>(sp =>
+{
+    var userSettings = sp.GetRequiredService<IOptions<UserDatabaseSettings>>().Value;
+    return new UserMongoClient(new MongoClient(userSettings.ConnectionString));
+});
+
+builder.Services.AddSingleton<ChangeRequestMongoClient>(sp =>
+{
+    var crSettings = sp.GetRequiredService<IOptions<ChangeRequestDatabaseSettings>>().Value;
+    return new ChangeRequestMongoClient(new MongoClient(crSettings.ConnectionString));
+});
+
+
+builder.Services.AddHealthChecks()
+  .AddMongoDb(
+      sp => sp.GetRequiredService<UserMongoClient>().Client,
+      databaseNameFactory: sp => sp.GetRequiredService<IOptions<UserDatabaseSettings>>().Value.DatabaseName,
+      name: "user-mongodb"
+  )
+  .AddMongoDb(
+      sp => sp.GetRequiredService<ChangeRequestMongoClient>().Client,
+      databaseNameFactory: sp => sp.GetRequiredService<IOptions<ChangeRequestDatabaseSettings>>().Value.DatabaseName,
+      name: "change-request-mongodb"
+);
 
 builder.Services.AddControllers()
   .AddJsonOptions(options => {
@@ -161,6 +193,27 @@ builder.WebHost.UseUrls("http://0.0.0.0:3000");
 // use our auth service
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapHealthChecks("/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+{
+  ResponseWriter = async (context, report) =>
+  {
+    context.Response.ContentType = "application/json";
+    var uptime = DateTime.UtcNow - appStartTime;
+    var result = JsonSerializer.Serialize(new
+    {
+      status = report.Status.ToString(),
+      uptime = uptime.ToString(@"dd\.hh\:mm\:ss"),
+      checks = report.Entries.Select(e => new {
+        name = e.Key,
+        status = e.Value.Status.ToString(),
+        exception = e.Value.Exception?.Message,
+        duration = e.Value.Duration.ToString()
+      })
+    });
+    await context.Response.WriteAsync(result);
+  }
+});
 
 app.MapControllers();
 
