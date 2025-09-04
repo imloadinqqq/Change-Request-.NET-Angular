@@ -61,6 +61,13 @@ public class ChangeRequestController : ControllerBase
   {
     try
     {
+      var request = await _changeRequestService.GetByRequestIdAsync(id);
+      if (request == null)
+        return NotFound("Request not found");
+
+      if (request.Status == RequestStatus.Pending)
+        return BadRequest("Cannot change status while request is pending");
+
       await _changeRequestService.PatchStatusAsync(id, obj.NewStatus);
       return Ok("Status updated successfully");
     }

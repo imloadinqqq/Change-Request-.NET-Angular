@@ -35,9 +35,12 @@ public class ChangeRequestService
     return await _changeCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
   }
 
-  public async Task<List<ChangeRequest>> GetByUserIdAsync(string userId) {
+  public async Task<ChangeRequest?> GetByIdAsync(string id)
+  {
     Interlocked.Increment(ref Count);
-    return await _changeCollection.Find(x => x.UserId == userId).ToListAsync();
+    return await _changeCollection
+      .Find(x => x.Id == id)
+      .FirstOrDefaultAsync();
   }
 
   public async Task CreateAsync(ChangeRequest newRequest) {
