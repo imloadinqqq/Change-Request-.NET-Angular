@@ -59,4 +59,10 @@ namespace ChangeRequestApi.Models
     // todo
     //public DateTime? ApprovedDate { get; set; }
   }
+
+  public class UpdateStatusObject 
+  {
+    public string NewStatus { get; set; } = null!;
+  }
+
 }

@@ -50,6 +50,27 @@ public class ChangeRequestService
     await _changeCollection.ReplaceOneAsync(x => x.Id == id, updatedRequest);
   }
 
+  public async Task PatchStatusAsync(string id, string newStatus)
+  {
+    Interlocked.Increment(ref Count);
+    if (!Enum.TryParse<RequestStatus>(newStatus, ignoreCase: true, out var statusEnum))
+    {
+      throw new ArgumentException("Invalid status");
+    }
+
+    var update = Builders<ChangeRequest>.Update.Set(x => x.Status, statusEnum);
+
+    var res = await _changeCollection.UpdateOneAsync(
+        x => x.Id == id,
+        update
+    );
+
+    if (res.MatchedCount == 0)
+    {
+      throw new KeyNotFoundException("Change request not found");
+    }
+  }
+
   public async Task RemoveAsync(string id) {
     Interlocked.Increment(ref Count);
     await _changeCollection.DeleteOneAsync(x => x.Id == id);
@@ -113,4 +134,6 @@ public class ChangeRequestService
 
     return res;
   }
+
+
 }

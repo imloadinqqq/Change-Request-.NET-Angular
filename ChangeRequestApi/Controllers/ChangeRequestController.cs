@@ -1,11 +1,7 @@
 using ChangeRequestApi.Models;
 using ChangeRequestApi.Services;
-using ChangeRequestApi.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 
 namespace ChangeRequestApi.Controllers;
@@ -57,6 +53,25 @@ public class ChangeRequestController : ControllerBase
     }
 
     return requests;
+  }
+
+  [Authorize (Roles = "Admin,Supervisor")]
+  [HttpPatch("{id:length(24)}/status")]
+  public async Task<IActionResult> UpdateStatus(string id, [FromBody] UpdateStatusObject obj)
+  {
+    try
+    {
+      await _changeRequestService.PatchStatusAsync(id, obj.NewStatus);
+      return Ok("Status updated successfully");
+    }
+    catch (ArgumentException ex)
+    {
+      return BadRequest(ex.Message);
+    }
+    catch (KeyNotFoundException ex)
+    {
+      return NotFound(ex.Message);
+    }
   }
 
   [HttpGet("{id:length(24)}")]
