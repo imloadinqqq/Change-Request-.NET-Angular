@@ -62,4 +62,16 @@ export class ChangeRequestService {
       map(res => res.Id!)
     );
   }
+
+  updateChangeRequestStatus(requestId: string, status: string): Observable<string> {
+    const url = `${this.api_url}/${requestId}/status`;
+
+    const token = this.userService.getToken();
+    let headers = new HttpHeaders();
+    if (token) headers = headers.set('Authorization', `Bearer ${token}`);
+
+    const body = { NewStatus: status };
+
+    return this.http.patch(url, body, { headers, responseType: 'text' });
+  }
 }

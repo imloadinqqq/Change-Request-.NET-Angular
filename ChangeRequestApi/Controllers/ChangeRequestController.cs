@@ -68,16 +68,15 @@ public class ChangeRequestController : ControllerBase
       if (request.Status == RequestStatus.Pending)
         return BadRequest("Cannot change status while request is pending");
 
+      if (obj.NewStatus == "Approved" || obj.NewStatus == "Rejected")
+        return BadRequest("Request already approved/rejected");
+
       await _changeRequestService.PatchStatusAsync(id, obj.NewStatus);
       return Ok("Status updated successfully");
     }
     catch (ArgumentException ex)
     {
       return BadRequest(ex.Message);
-    }
-    catch (KeyNotFoundException ex)
-    {
-      return NotFound(ex.Message);
     }
   }
 

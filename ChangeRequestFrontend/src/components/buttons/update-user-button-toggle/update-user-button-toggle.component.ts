@@ -25,7 +25,7 @@ export class UpdateUserButtonToggleComponent implements OnInit {
     this.selectedRole = this.currentRole ?? 'developer';
   }
 
-onRoleChange() {
+  onRoleChange() {
     if (!this.userId) return;
     this.userService.updateUserRole(this.userId, this.selectedRole).subscribe({
       next: (res) => {

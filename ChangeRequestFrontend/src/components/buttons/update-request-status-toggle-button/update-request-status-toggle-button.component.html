@@ -1,0 +1,11 @@
+<mat-button-toggle-group [(ngModel)]="selectedStatus">
+  <mat-button-toggle value="InProgress">In Progress</mat-button-toggle>
+  <mat-button-toggle value="Completed">Completed</mat-button-toggle>
+</mat-button-toggle-group>
+<br>
+
+<button
+  (click)="onStatusChange()"
+  class="mt-2 bg-blue-500 text-white font-semibold py-1 px-3 rounded hover:bg-blue-600">
+  Update Status
+</button>
