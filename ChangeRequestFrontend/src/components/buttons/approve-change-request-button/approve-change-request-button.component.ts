@@ -2,6 +2,7 @@ import { Component, inject, Input, Output, EventEmitter } from '@angular/core';
 import { ChangeRequestService } from '../../../services/change-request/change-request.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-approve-change-request-button',
@@ -26,13 +27,21 @@ export class ApproveChangeRequestButtonComponent {
         });
         this.approved.emit();
       },
-      error: (err) => {
-        console.log("Failed to approved: ", err);
-        this.snackBar.open('Failed to approve change request', 'Close', {
-          duration: 5000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top'
-        });
+      error: (error: HttpErrorResponse) => {
+        if (error.status === 409) {
+          console.log("Failed to approve: ", error);
+          this.snackBar.open('Request has already been processed.', 'Close', {
+            duration: 5000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+          });
+        } else {
+          this.snackBar.open(`Error ${error.status}: ${error.message}`, 'Close', {
+            duration: 5000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+          });
+        }
       }
     })
   }

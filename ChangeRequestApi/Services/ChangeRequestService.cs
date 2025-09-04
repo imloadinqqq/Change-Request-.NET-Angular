@@ -65,14 +65,25 @@ public class ChangeRequestService
   public async Task<ChangeRequest?> ApproveRequestAsync(string id, string approverId)
   {
     Interlocked.Increment(ref Count);
+
+    var filter = Builders<ChangeRequest>.Filter.Eq(x => x.Id, id);
+
     var update = Builders<ChangeRequest>.Update
       .Set(x => x.Status, RequestStatus.Approved)
       .Set(x => x.ApprovedById, approverId);
 
-    var res = await _changeCollection.FindOneAndUpdateAsync(x => x.Id == id, update, new FindOneAndUpdateOptions<ChangeRequest>
+    var res = await _changeCollection.FindOneAndUpdateAsync(
+      x => x.Id == id && x.Status == RequestStatus.Pending,
+      update
+    );
+
+    if (res == null)
     {
-      ReturnDocument = ReturnDocument.After
-    });
+      var exists = await _changeCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+      if (exists == null)
+        return null;
+      throw new InvalidOperationException("Already processed.");
+    } 
 
     return res;
   }
@@ -80,14 +91,25 @@ public class ChangeRequestService
   public async Task<ChangeRequest?> RejectRequestAsync(string id, string approverId)
   {
     Interlocked.Increment(ref Count);
+
+    var filter = Builders<ChangeRequest>.Filter.Eq(x => x.Id, id);
+
     var update = Builders<ChangeRequest>.Update
       .Set(x => x.Status, RequestStatus.Rejected)
       .Set(x => x.ApprovedById, approverId);
 
-    var res = await _changeCollection.FindOneAndUpdateAsync(x => x.Id == id, update, new FindOneAndUpdateOptions<ChangeRequest>
+    var res = await _changeCollection.FindOneAndUpdateAsync(
+      x => x.Id == id && x.Status == RequestStatus.Pending,
+      update
+    );
+
+    if (res == null)
     {
-      ReturnDocument = ReturnDocument.After
-    });
+      var exists = await _changeCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+      if (exists == null)
+        return null;
+      throw new InvalidOperationException("Already processed.");
+    } 
 
     return res;
   }

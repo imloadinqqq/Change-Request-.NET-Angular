@@ -2,6 +2,7 @@ import { Component, inject, Input, Output, EventEmitter } from '@angular/core';
 import { ChangeRequestService } from '../../../services/change-request/change-request.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-reject-change-request-button',
@@ -27,13 +28,21 @@ export class RejectChangeRequestButtonComponent {
         });
         this.rejected.emit();
       },
-      error: (err) => {
-        console.error("Failed to reject: ", err);
-        this.snackBar.open('Failed to reject change request', 'Close', {
-          duration: 5000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-        });
+      error: (error: HttpErrorResponse) => {
+        if (error.status === 409) {
+          console.log("Failed to reject: ", error);
+          this.snackBar.open('Request has already been processed.', 'Close', {
+            duration: 5000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+          });
+        } else {
+          this.snackBar.open(`Error ${error.status}: ${error.message}`, 'Close', {
+            duration: 5000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top'
+          });
+        }
       }
     });
   }

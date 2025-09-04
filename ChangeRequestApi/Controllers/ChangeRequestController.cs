@@ -113,26 +113,39 @@ public class ChangeRequestController : ControllerBase
   [Authorize(Roles = "Admin,Supervisor")]
   public async Task<IActionResult> ApproveRequest(string requestId)
   {
-    var approverId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ??
-             User.FindFirst("sub")?.Value;
-    var updatedRequest = await _changeRequestService.ApproveRequestAsync(requestId, approverId!);
-    if (updatedRequest == null)
-      return NotFound(new { message = "Request not found" });
+    try 
+    {
+      var approverId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ??
+               User.FindFirst("sub")?.Value;
+      var updatedRequest = await _changeRequestService.ApproveRequestAsync(requestId, approverId!);
 
-    return Ok(updatedRequest);
+      if (updatedRequest == null)
+        return NotFound(new { message = "Request not found" });
+
+      return Ok(updatedRequest);
+    } catch (InvalidOperationException) 
+    {
+      return Conflict(new { message = "Request has been processed." });
+    }
   }
 
   [HttpPost("{requestId}/reject")]
   [Authorize(Roles = "Admin,Supervisor")]
   public async Task<IActionResult> RejectRequest(string requestId)
   {
-    var approverId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ??
-             User.FindFirst("sub")?.Value;
-    var updatedRequest = await _changeRequestService.RejectRequestAsync(requestId, approverId!);
-    if (updatedRequest == null)
-      return NotFound(new { message = "Request not found" });
+    try 
+    {
+      var approverId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ??
+               User.FindFirst("sub")?.Value;
+      var updatedRequest = await _changeRequestService.RejectRequestAsync(requestId, approverId!);
+      // if (updatedRequest == null)
+      //   return NotFound(new { message = "Request not found" });
 
-    return Ok(updatedRequest);
+      return Ok(updatedRequest);
+    } catch (InvalidOperationException)
+    {
+      return Conflict(new { message = "Request has been processed." });
+    }
   }
 
   [Authorize (Roles = "Admin")]
