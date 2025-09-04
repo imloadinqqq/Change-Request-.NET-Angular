@@ -61,7 +61,7 @@ public class ChangeRequestController : ControllerBase
   {
     try
     {
-      var request = await _changeRequestService.GetByRequestIdAsync(id);
+      var request = await _changeRequestService.GetAsync(id);
       if (request == null)
         return NotFound("Request not found");
 
