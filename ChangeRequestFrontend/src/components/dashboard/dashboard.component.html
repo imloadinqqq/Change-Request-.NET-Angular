@@ -1,41 +1,41 @@
-<h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Hello, {{ userName }}</h2>
+<div class="flex flex-col items-center justify-center min-h-screen bg-gray-100 space-y-4">
+  <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Hello, {{ userName }}</h2>
 
-<!-- Admin -->
-<div *ngIf="userType === 'Admin'" class="max-w-md mx-auto bg-white shadow-lg rounded-xl p-6 space-y-4">
-  <h1 class="text-xl font-semibold text-gray-700 text-center">Admin Dashboard</h1>
-  <app-clock class="mx-auto mb-4"></app-clock>
+  <!-- Admin -->
+  <div *ngIf="userType === 'Admin'" class="max-w-md mx-auto bg-white shadow-lg rounded-xl p-6 space-y-4">
+    <h1 class="text-xl font-semibold text-gray-700 text-center">Admin Dashboard</h1>
+    <app-clock class="mx-auto mb-4"></app-clock>
 
-  <div class="space-y-3">
-    <button class="w-full bg-gray-100 text-gray-800 font-semibold py-2 rounded-lg hover:bg-gray-200 transition" (click)="navToRequests()">Requests</button>
-    <button class="w-full bg-gray-100 text-gray-800 font-semibold py-2 rounded-lg hover:bg-gray-200 transition" (click)="viewUsers()">View Users</button>
-    <button class="w-full bg-gray-100 text-gray-800 font-semibold py-2 rounded-lg hover:bg-gray-200 transition" (click)="viewUserStats()">View User Stats</button>
-    <app-createchangrequestbutton class="w-full mt-2"></app-createchangrequestbutton>
+    <div class="space-y-3">
+      <button class="w-full bg-gray-100 text-gray-800 font-semibold py-2 rounded-lg hover:bg-gray-200 transition" (click)="navToRequests()">Requests</button>
+      <button class="w-full bg-gray-100 text-gray-800 font-semibold py-2 rounded-lg hover:bg-gray-200 transition" (click)="viewUsers()">View Users</button>
+      <button class="w-full bg-gray-100 text-gray-800 font-semibold py-2 rounded-lg hover:bg-gray-200 transition" (click)="viewUserStats()">View User Stats</button>
+      <app-createchangrequestbutton class="w-full mt-2"></app-createchangrequestbutton>
+    </div>
   </div>
-</div>
 
-<!-- Developer -->
-<div *ngIf="userType === 'Developer'" class="max-w-md mx-auto bg-white shadow-lg rounded-xl p-6 space-y-4">
-  <h1 class="text-xl font-semibold text-gray-700 text-center">Developer Dashboard</h1>
-  <app-clock class="mx-auto mb-4"></app-clock>
+  <!-- Developer -->
+  <div *ngIf="userType === 'Developer'" class="max-w-md mx-auto bg-white shadow-lg rounded-xl p-6 space-y-4">
+    <h1 class="text-xl font-semibold text-gray-700 text-center">Developer Dashboard</h1>
+    <app-clock class="mx-auto mb-4"></app-clock>
 
-  <div class="space-y-3">
-    <button class="w-full bg-gray-100 text-gray-800 font-semibold py-2 rounded-lg hover:bg-gray-200 transition" (click)="navToRequests()">Requests</button>
-    <app-createchangrequestbutton class="w-full mt-2"></app-createchangrequestbutton>
+    <div class="space-y-3">
+      <button class="w-full bg-gray-100 text-gray-800 font-semibold py-2 rounded-lg hover:bg-gray-200 transition" (click)="navToRequests()">Requests</button>
+      <app-createchangrequestbutton class="w-full mt-2"></app-createchangrequestbutton>
+    </div>
   </div>
-</div>
 
-<!-- Supervisor -->
-<div *ngIf="userType === 'Supervisor'" class="max-w-md mx-auto bg-white shadow-lg rounded-xl p-6 space-y-4">
-  <h1 class="text-xl font-semibold text-gray-700 text-center">Supervisor Dashboard</h1>
-  <app-clock class="mx-auto mb-4"></app-clock>
+  <!-- Supervisor -->
+  <div *ngIf="userType === 'Supervisor'" class="max-w-md mx-auto bg-white shadow-lg rounded-xl p-6 space-y-4">
+    <h1 class="text-xl font-semibold text-gray-700 text-center">Supervisor Dashboard</h1>
+    <app-clock class="mx-auto mb-4"></app-clock>
 
-  <div class="space-y-3">
-    <button class="w-full bg-gray-100 text-gray-800 font-semibold py-2 rounded-lg hover:bg-gray-200 transition" (click)="navToRequests()">Requests</button>
-    <app-createchangrequestbutton class="w-full mt-2"></app-createchangrequestbutton>
+    <div class="space-y-3">
+      <button class="w-full bg-gray-100 text-gray-800 font-semibold py-2 rounded-lg hover:bg-gray-200 transition" (click)="navToRequests()">Requests</button>
+      <app-createchangrequestbutton class="w-full mt-2"></app-createchangrequestbutton>
+    </div>
   </div>
+  <!-- Logout -->
+<button class="w-[25%] bg-red-500 text-white font-semibold py-2 rounded-lg hover:bg-red-600 transition" (click)="logout()">Logout</button>
 </div>
 
-<!-- Logout -->
-<div class="max-w-md mx-auto mt-6">
-  <button class="w-full bg-red-500 text-white font-semibold py-2 rounded-lg hover:bg-red-600 transition" (click)="logout()">Logout</button>
-</div>
