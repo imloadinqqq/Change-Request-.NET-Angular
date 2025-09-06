@@ -1,7 +1,7 @@
 import { jwtDecode } from 'jwt-decode';
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { catchError, Observable, tap, throwError } from 'rxjs';
+import { catchError, Observable, Subject, tap, throwError } from 'rxjs';
 
 interface JwtPayload {
   sub: string;
@@ -39,6 +39,8 @@ export class UserService {
 
   private tokenKey = 'auth_token';
   private readonly api_url = 'http://localhost:3000/api';
+
+  userLoggedIn: Subject<boolean> = new Subject();
 
   private http = inject(HttpClient);
 
@@ -85,6 +87,7 @@ export class UserService {
   setToken(token: string): void {
     if (this.isBrowser()) {
       localStorage.setItem(this.tokenKey, token);
+      this.userLoggedIn.next(true);
     }
   }
 
@@ -100,6 +103,7 @@ export class UserService {
 
   logout(): void {
     this.removeToken();
+    this.userLoggedIn.next(false);
   }
 
   private getDecodedToken(): JwtPayload | null {
