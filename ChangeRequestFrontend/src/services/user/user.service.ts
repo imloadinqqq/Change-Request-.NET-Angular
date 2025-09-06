@@ -45,7 +45,7 @@ export class UserService {
   private http = inject(HttpClient);
 
   private isBrowser(): boolean {
-    return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
+    return typeof window !== 'undefined' && typeof sessionStorage !== 'undefined';
   }
 
   login(credentials: { username: string; password: string }) {
@@ -55,8 +55,8 @@ export class UserService {
     ).pipe(
       tap(res => {
         if (this.isBrowser()) {
-          localStorage.setItem(this.tokenKey, res.token);
-          localStorage.setItem('username', res.user.username);
+          sessionStorage.setItem(this.tokenKey, res.token);
+          sessionStorage.setItem('username', res.user.username);
         }
       }),
       catchError((error: HttpErrorResponse) => {
@@ -86,19 +86,19 @@ export class UserService {
   // called after successful login (200 status)
   setToken(token: string): void {
     if (this.isBrowser()) {
-      localStorage.setItem(this.tokenKey, token);
+      sessionStorage.setItem(this.tokenKey, token);
       this.userLoggedIn.next(true);
     }
   }
 
   getToken(): string | null {
-    return this.isBrowser() ? localStorage.getItem(this.tokenKey) : null;
+    return this.isBrowser() ? sessionStorage.getItem(this.tokenKey) : null;
   }
 
   // logout
   removeToken(): void {
-    localStorage.removeItem(this.tokenKey);
-    localStorage.removeItem('username');
+    sessionStorage.removeItem(this.tokenKey);
+    sessionStorage.removeItem('username');
   }
 
   logout(): void {
@@ -128,7 +128,7 @@ export class UserService {
   }
 
   getUserName(): string | null {
-    return this.isBrowser() ? localStorage.getItem("username") : null;
+    return this.isBrowser() ? sessionStorage.getItem("username") : null;
   }
 
   getAllUsers(): Observable<User[]> {
