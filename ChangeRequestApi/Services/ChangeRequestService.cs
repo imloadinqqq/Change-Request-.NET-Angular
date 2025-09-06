@@ -91,7 +91,8 @@ public class ChangeRequestService
 
     var update = Builders<ChangeRequest>.Update
       .Set(x => x.Status, RequestStatus.Approved)
-      .Set(x => x.ApprovedById, approverId);
+      .Set(x => x.ApprovedById, approverId)
+      .Set(x => x.ApprovalDate, DateTime.Now);
 
     var res = await _changeCollection.FindOneAndUpdateAsync(
       x => x.Id == id && x.Status == RequestStatus.Pending,
@@ -117,7 +118,8 @@ public class ChangeRequestService
 
     var update = Builders<ChangeRequest>.Update
       .Set(x => x.Status, RequestStatus.Rejected)
-      .Set(x => x.ApprovedById, approverId);
+      .Set(x => x.ApprovedById, approverId)
+      .Set(x => x.ApprovalDate, DateTime.Now);
 
     var res = await _changeCollection.FindOneAndUpdateAsync(
       x => x.Id == id && x.Status == RequestStatus.Pending,

@@ -47,7 +47,7 @@ export class CreateChangeRequestDialogComponent {
         Description: this.requestForm.value.description!,
         Status: 0,
         Priority: this.requestForm.value.priority!,
-        "Target Date": this.requestForm.value.targetDate
+        TargetDate: this.requestForm.value.targetDate
           ? new Date(this.requestForm.value.targetDate)
           : undefined
 

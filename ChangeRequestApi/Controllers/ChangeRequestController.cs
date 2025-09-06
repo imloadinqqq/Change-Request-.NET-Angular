@@ -106,6 +106,7 @@ public class ChangeRequestController : ControllerBase
 
     // populate change request user id field
     newRequest.UserId = userId;
+    newRequest.CreatedDate = DateTime.Now;
 
     await _changeRequestService.CreateAsync(newRequest);
 

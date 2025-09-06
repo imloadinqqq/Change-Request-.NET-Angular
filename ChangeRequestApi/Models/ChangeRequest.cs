@@ -26,6 +26,10 @@ namespace ChangeRequestApi.Models
     [JsonPropertyName("Id")]
     public string? Id { get; set; }
 
+    [BsonElement("createdDate")]
+    [JsonPropertyName("CreatedDate")]
+    public DateTime? CreatedDate { get; set; }
+
     [BsonRepresentation(BsonType.ObjectId)]
     [JsonPropertyName("UserId")]
     public string? UserId { get; set; }
@@ -48,16 +52,18 @@ namespace ChangeRequestApi.Models
 
     [BsonElement("targetDate")]
     [BsonRepresentation(BsonType.DateTime)]
-    [JsonPropertyName("Target Date")]
+    [JsonPropertyName("TargetDate")]
     public DateTime? TargetDate { get; set; }
 
-    [BsonElement("approvedById")]
+    [BsonElement("approverId")]
     [BsonRepresentation(BsonType.ObjectId)]
-    [JsonPropertyName("Id of Approver")]
+    [JsonPropertyName("ApproverId")]
     public string? ApprovedById { get; set; }
 
-    // todo
-    //public DateTime? ApprovedDate { get; set; }
+    [BsonElement("approvalDate")]
+    [BsonRepresentation(BsonType.DateTime)]
+    [JsonPropertyName("ApprovalDate")]
+    public DateTime? ApprovalDate { get; set; }
   }
 
   public class UpdateStatusObject 

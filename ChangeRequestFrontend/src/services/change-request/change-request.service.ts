@@ -5,13 +5,15 @@ import { UserService } from '../user/user.service';
 
 export interface ChangeRequest {
   "Id"?: string;
+  "CreatedDate"?: Date;
   "UserId"?: string;
   "Title": string;
   "Description": string;
   "Status": number;
   "Priority": number;
-  "Target Date"?: Date;
-  "Id of Approver"?: string | null;
+  "TargetDate"?: Date;
+  "ApproverId"?: string | null;
+  "ApprovalDate"?: Date;
 }
 
 @Injectable({
