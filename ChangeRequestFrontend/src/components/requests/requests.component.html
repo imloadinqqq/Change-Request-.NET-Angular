@@ -52,7 +52,10 @@
           (rejected)="loadRequests()">
         </app-reject-change-request-button>
       </div>
-      <div class="mt-3" *ngIf="userType === 'Admin' || userType === 'Supervisor' && req.Status.toString() !== 'Pending'">
+      <div class="mt-3" *ngIf="(userType === 'Admin' || userType === 'Supervisor')
+                                && req.Status.toString() !== 'Pending'
+                                && req.Status.toString() !== 'Rejected'
+                                && req.Status.toString() !== 'Completed'">
         <app-update-request-status-toggle-button
           [requestId]="req.Id"
           (statusChanged)="loadRequests()">

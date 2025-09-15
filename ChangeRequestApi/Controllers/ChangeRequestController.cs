@@ -68,6 +68,9 @@ public class ChangeRequestController : ControllerBase
       if (request.Status == RequestStatus.Pending)
         return BadRequest("Cannot change status while request is pending");
 
+      if (request.Status == RequestStatus.Completed)
+        return BadRequest("Cannot change status after request has been completed");
+
       if (obj.NewStatus == "Approved" || obj.NewStatus == "Rejected")
         return BadRequest("Request already approved/rejected");
 
