@@ -7,10 +7,11 @@ import { DashboardbuttonComponent } from '../buttons/dashboard-button/dashboard-
 import { ApproveChangeRequestButtonComponent } from '../buttons/approve-change-request-button/approve-change-request-button.component';
 import { RejectChangeRequestButtonComponent } from '../buttons/reject-change-request-button/reject-change-request-button.component';
 import { UpdateRequestStatusToggleButtonComponent } from '../buttons/update-request-status-toggle-button/update-request-status-toggle-button.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({
   selector: 'app-requests',
-  imports: [CommonModule, RouterModule, DashboardbuttonComponent, ApproveChangeRequestButtonComponent, RejectChangeRequestButtonComponent, UpdateRequestStatusToggleButtonComponent],
+  imports: [CommonModule, RouterModule, DashboardbuttonComponent, ApproveChangeRequestButtonComponent, RejectChangeRequestButtonComponent, UpdateRequestStatusToggleButtonComponent, NgxPaginationModule],
   templateUrl: './requests.component.html',
   styleUrl: './requests.component.css'
 })
@@ -21,6 +22,7 @@ export class RequestsComponent implements OnInit {
   requests: ChangeRequest[] = [];
   userName: string | null = null;
   userType: string | null = null;
+  page: number = 1;
 
   ngOnInit(): void {
     if (typeof window !== 'undefined') {

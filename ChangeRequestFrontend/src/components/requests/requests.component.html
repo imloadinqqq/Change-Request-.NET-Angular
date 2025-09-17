@@ -2,7 +2,7 @@
   <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Change Requests</h2>
 
   <ul *ngIf="requests && requests.length; else noRequests" class="space-y-4 max-w-2xl mx-auto">
-    <li *ngFor="let req of requests"
+    <li *ngFor="let req of requests | paginate: { itemsPerPage: 10, currentPage: page }"
         class="bg-white shadow-md rounded-lg p-4 border border-gray-200">
 
       <p><span class="font-semibold text-gray-700">ID:</span> {{ req.Id }}</p>
@@ -63,6 +63,9 @@
       </div>
     </li>
   </ul>
+  <div class="mt-6 w-full flex justify-center">
+    <pagination-controls (pageChange)="page = $event"></pagination-controls>
+  </div>
 
   <ng-template #noRequests>
     <p class="text-center text-gray-500 mt-6">No change requests available.</p>
