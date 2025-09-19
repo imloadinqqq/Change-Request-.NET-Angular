@@ -32,7 +32,7 @@ FROM nginxinc/nginx-unprivileged:${NGINX_VERSION} AS runner
 USER nginx
 
 # Copy custom Nginx config
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY --chown=nginx:nginx nginx.conf /etc/nginx/nginx.conf
 
 # Copy the static build output from the build stage to Nginx's default HTML serving directory
 COPY --chown=nginx:nginx --from=builder /app/dist/*/browser /usr/share/nginx/html
