@@ -20,9 +20,12 @@ export class RequestsComponent implements OnInit {
   private userService = inject(UserService);
 
   requests: ChangeRequest[] = [];
+  filteredRequests: ChangeRequest[] = [];
+  allStatus: string[] = ["Pending", "Approved", "Rejected", "InProgress", "Completed"];
   userName: string | null = null;
   userType: string | null = null;
   page: number = 1;
+  currentStatusFilter: string | null = null;
 
   ngOnInit(): void {
     if (typeof window !== 'undefined') {
@@ -34,7 +37,9 @@ export class RequestsComponent implements OnInit {
 
   loadRequests() {
     this.changeRequestService.getAllRequests().subscribe({
-      next: data => this.requests = data,
+      next: (requests) => {
+        this.requests = requests.map((request) => ({ ...request }));
+      },
       error: err => console.error('Failed to load requests', err)
     });
   }
@@ -46,6 +51,17 @@ export class RequestsComponent implements OnInit {
 
   loadUserType() {
     this.userType = this.userService.getUserType();
+  }
+
+  filterByStatus(status: string) {
+    this.currentStatusFilter = status;
+    this.filteredRequests = this.requests.filter((request) => request.Status.toString() === status);
+    console.log(this.currentStatusFilter);
+  }
+
+  clearFilter() {
+    this.currentStatusFilter = null;
+    this.filteredRequests = [...this.requests];
   }
 
 }
