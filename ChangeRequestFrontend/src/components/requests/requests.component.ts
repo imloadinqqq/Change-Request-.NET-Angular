@@ -21,7 +21,7 @@ export class RequestsComponent implements OnInit {
 
   requests: ChangeRequest[] = [];
   filteredRequests: ChangeRequest[] = [];
-  allStatus: string[] = ["Pending", "Approved", "Rejected", "InProgress", "Completed"];
+  allStatus: string[] = ["All", "Pending", "Approved", "Rejected", "InProgress", "Completed"];
   userName: string | null = null;
   userType: string | null = null;
   page: number = 1;
@@ -39,6 +39,7 @@ export class RequestsComponent implements OnInit {
     this.changeRequestService.getAllRequests().subscribe({
       next: (requests) => {
         this.requests = requests.map((request) => ({ ...request }));
+        this.filteredRequests = [...this.requests]; // populate requests
       },
       error: err => console.error('Failed to load requests', err)
     });
@@ -55,8 +56,11 @@ export class RequestsComponent implements OnInit {
 
   filterByStatus(status: string) {
     this.currentStatusFilter = status;
-    this.filteredRequests = this.requests.filter((request) => request.Status.toString() === status);
-    console.log(this.currentStatusFilter);
+    if (status === "All" || status === null) {
+      this.filteredRequests = [...this.requests];
+    } else {
+      this.filteredRequests = this.requests.filter((request) => request.Status.toString() === status);
+    }
   }
 
   clearFilter() {
